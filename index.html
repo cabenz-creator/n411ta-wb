@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="N411TA W&amp;B">
+<meta name="theme-color" content="#eef1f3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f161d" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<title>R172E Weight &amp; Balance</title>
+<style>
+:root{color-scheme:light}
+/* Layout: handbook-style load sheet (left) beside a live CG moment envelope (right); stacks on phones */
+:root{
+  --bg:#eef1f3; --paper:#fbfcfc; --ink:#17283a; --muted:#5b6a78; --rule:#cfd7de; --grid:#dde4ea;
+  --accent:#b8661c; --accent-soft:#f4e3d2; --ok:#1f7a4d; --ok-soft:#dcefe4; --bad:#b3261e; --bad-soft:#f6dcda;
+  --env:#2b5d8a; --env-fill:rgba(43,93,138,.10); --util:#7a5a9e;
+  --display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f161d; --paper:#16212b; --ink:#e3eaf0; --muted:#93a3b2; --rule:#2a3a48; --grid:#22313e;
+  --accent:#e39a52; --accent-soft:#3a2a1b; --ok:#5cc58f; --ok-soft:#173326; --bad:#f08079; --bad-soft:#3d1c1a;
+  --env:#7fb3e0; --env-fill:rgba(127,179,224,.12); --util:#b79be0; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f161d; --paper:#16212b; --ink:#e3eaf0; --muted:#93a3b2; --rule:#2a3a48; --grid:#22313e;
+  --accent:#e39a52; --accent-soft:#3a2a1b; --ok:#5cc58f; --ok-soft:#173326; --bad:#f08079; --bad-soft:#3d1c1a;
+  --env:#7fb3e0; --env-fill:rgba(127,179,224,.12); --util:#b79be0; color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;-webkit-tap-highlight-color:transparent;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-top:calc(20px + env(safe-area-inset-top,0px));padding-bottom:calc(40px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:22px}
+.eyebrow{font-family:var(--display);font-weight:600;letter-spacing:.12em;text-transform:uppercase;font-size:13px;color:var(--accent)}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(28px,4.5vw,40px);line-height:1.05;margin:2px 0 0;text-wrap:balance;letter-spacing:.01em}
+.spec{font-family:var(--mono);font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 16px}
+.spec b{color:var(--ink);font-weight:600}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:18px;min-width:0}
+h2{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 12px;color:var(--muted)}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:7px 6px;border-bottom:1px solid var(--rule);text-align:right;vertical-align:middle}
+th{font-family:var(--display);font-weight:600;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+th:first-child,td:first-child{text-align:left}
+td.item{min-width:150px}
+td.item .lim{display:block;font-size:12px;color:var(--muted)}
+td.num{font-family:var(--mono);font-size:14px;white-space:nowrap}
+input[type=number]{font-family:var(--mono);font-size:16px;width:84px;padding:5px 7px;border:1px solid var(--rule);border-radius:4px;background:var(--bg);color:var(--ink);text-align:right}
+input.arm{width:66px;background:transparent;border-style:dashed}
+input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input.over{border-color:var(--bad);background:var(--bad-soft)}
+.gal{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+.gal span{font-family:var(--mono);font-size:12px;color:var(--muted)}
+tr.total td{border-top:2px solid var(--ink);border-bottom:none;font-weight:600}
+tr.sub td{background:var(--bg)}
+.note{font-size:12.5px;color:var(--muted);margin:12px 0 0}
+.row-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+button{font-family:var(--display);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:13px;padding:7px 12px;border-radius:4px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);cursor:pointer}
+button:hover{border-color:var(--ink)}
+.results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.res{border:1px solid var(--rule);border-radius:6px;padding:12px 14px;min-width:0}
+.res .lbl{font-family:var(--display);font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:12.5px;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.res .cg{font-family:var(--mono);font-size:26px;font-weight:600;line-height:1.2;margin-top:4px}
+.res .cg small{font-size:13px;color:var(--muted);font-weight:400}
+.res .det{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.pill{display:inline-block;font-family:var(--display);font-weight:700;letter-spacing:.08em;font-size:12px;padding:2px 8px;border-radius:999px}
+.pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.bad{background:var(--bad-soft);color:var(--bad)}
+.msgs{list-style:none;padding:0;margin:0 0 14px;display:grid;gap:6px;font-size:13.5px}
+.msgs li{padding:7px 10px;border-radius:4px;border-left:3px solid}
+.msgs li.bad{background:var(--bad-soft);border-color:var(--bad)}
+.msgs li.info{background:var(--accent-soft);border-color:var(--accent)}
+.chart-wrap{overflow-x:auto}
+svg{display:block;width:100%;height:auto;min-width:340px}
+svg text{font-family:var(--mono);font-size:11px;fill:var(--muted)}
+svg .axis-t{font-family:var(--display);font-size:12px;letter-spacing:.08em;fill:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:6px}
+.limits{margin-top:18px}
+.limits dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;margin:0;font-size:13.5px}
+.limits dt{font-family:var(--mono);color:var(--ink);white-space:nowrap}
+.limits dd{margin:0;color:var(--muted)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--rule);border-radius:6px;padding:3px;background:var(--bg);margin-bottom:14px}
+.seg button{border:none;background:transparent;border-radius:4px;padding:9px 8px;color:var(--muted);text-transform:none;letter-spacing:.02em;font-size:15px}
+.seg button[aria-checked="true"]{background:var(--paper);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.seg button small{display:block;font-family:var(--body);font-weight:400;font-size:11.5px;letter-spacing:0;color:var(--muted)}
+input.placeholder{border-color:var(--accent);border-style:dashed;background:var(--accent-soft)}
+.cfgtag{color:var(--accent)}
+footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
+@media (prefers-reduced-motion:no-preference){circle.pt{transition:cx .25s,cy .25s}}
+@media (max-width:480px){.results{grid-template-columns:minmax(0,1fr)}
+  .panel{padding:14px 12px}
+  th,td{padding:6px 3px} th{font-size:11px;letter-spacing:.04em}
+  td.item{min-width:0;font-size:13.5px;line-height:1.3} td.item .lim{font-size:11px}
+  td.num{font-size:12.5px}
+  input[type=number]{width:66px;padding:5px 3px} input.arm{width:52px}
+  .gal{gap:3px} .gal span{font-size:11px}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Cessna R172E · Army T-41B</div>
+      <h1>Weight &amp; Balance Worksheet</h1>
+    </div>
+    <div class="spec">
+      <span>Gross <b>2500 lb</b></span>
+      <span>Usable fuel <b>46 gal</b></span>
+      <span>Baggage <b>200 lb</b></span>
+      <span>Utility <b>2200 lb</b></span>
+    </div>
+  </header>
+
+  <div class="grid">
+    <section class="panel" aria-labelledby="load-h">
+      <h2 id="load-h">Loading</h2>
+      <div class="seg" role="radiogroup" aria-label="Aircraft configuration">
+        <button type="button" role="radio" id="cfgStd" aria-checked="true">Standard<small>4 seats</small></button>
+        <button type="button" role="radio" id="cfgNoRear" aria-checked="false">Rear seat removed<small>2 seats</small></button>
+      </div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>Weight lb</th><th>Arm in</th><th>Moment/1000</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="item">Licensed empty weight<span class="lim" id="ewLim">From your airplane's W&amp;B data sheet / FAA 337</span></td>
+            <td><input type="number" id="ew" inputmode="decimal" step="0.1" value="1551"></td>
+            <td class="num" id="ewArm">—</td>
+            <td><input type="number" id="em" inputmode="decimal" step="0.01" value="59.8" aria-label="Empty moment/1000"></td>
+          </tr>
+          <tr>
+            <td class="item">Oil, 10 qt<span class="lim">Full oil assumed</span></td>
+            <td class="num">19</td>
+            <td><input type="number" class="arm" id="aOil" step="0.1" value="-21" aria-label="Oil arm"></td>
+            <td class="num" id="mOil">—</td>
+          </tr>
+          <tr>
+            <td class="item">Pilot &amp; front passenger</td>
+            <td><input type="number" id="wFront" inputmode="decimal" step="1" min="0" value="400"></td>
+            <td><input type="number" class="arm" id="aFront" step="0.1" value="36" aria-label="Front seat arm"></td>
+            <td class="num" id="mFront">—</td>
+          </tr>
+          <tr>
+            <td class="item">Fuel at 6 lb/gal<span class="lim">46 gal usable max</span></td>
+            <td><div class="gal"><input type="number" id="gFuel" inputmode="decimal" step="1" min="0" max="46" value="46" aria-label="Fuel gallons"><span>gal</span></div><div class="gal"><span id="wFuel">—</span></div></td>
+            <td><input type="number" class="arm" id="aFuel" step="0.1" value="48" aria-label="Fuel arm"></td>
+            <td class="num" id="mFuel">—</td>
+          </tr>
+          <tr id="rowRear">
+            <td class="item">Rear passengers</td>
+            <td><input type="number" id="wRear" inputmode="decimal" step="1" min="0" value="200"></td>
+            <td><input type="number" class="arm" id="aRear" step="0.1" value="70" aria-label="Rear seat arm"></td>
+            <td class="num" id="mRear">—</td>
+          </tr>
+          <tr>
+            <td class="item">Baggage<span class="lim">200 lb max</span></td>
+            <td><input type="number" id="wBag" inputmode="decimal" step="1" min="0" value="54"></td>
+            <td><input type="number" class="arm" id="aBag" step="0.1" value="95" aria-label="Baggage arm"></td>
+            <td class="num" id="mBag">—</td>
+          </tr>
+          <tr class="total">
+            <td>Takeoff</td><td class="num" id="tW">—</td><td class="num" id="tA">—</td><td class="num" id="tM">—</td>
+          </tr>
+          <tr class="sub">
+            <td class="item">Fuel burned<span class="lim">Trip + reserve used</span></td>
+            <td><div class="gal"><input type="number" id="gBurn" inputmode="decimal" step="1" min="0" value="20" aria-label="Fuel burned gallons"><span>gal</span></div></td>
+            <td class="num" id="aBurn">—</td>
+            <td class="num" id="mBurn">—</td>
+          </tr>
+          <tr class="total">
+            <td>Landing</td><td class="num" id="lW">—</td><td class="num" id="lA">—</td><td class="num" id="lM">—</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="note">Pick the configuration at the top; each keeps its own empty weight and moment. Opens on the handbook's sample problem (page 3-5): 2500 lb at 106.1, which falls inside the envelope. Replace the empty weight and moment with your airplane's licensed figures. Dashed fields are station arms; edit them if your W&amp;B data lists different stations.</p>
+      <div class="row-btns">
+        <button type="button" id="clearBtn">Clear payload</button>
+        <button type="button" id="sampleBtn">Load handbook sample</button>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="res-h">
+      <h2 id="res-h">Result · <span class="cfgtag" id="cfgName">Standard</span></h2>
+      <div class="results">
+        <div class="res" id="resT">
+          <div class="lbl"><span>Takeoff</span><span class="pill" id="pT">—</span></div>
+          <div class="cg" id="cgT">—</div>
+          <div class="det" id="dT">—</div>
+        </div>
+        <div class="res" id="resL">
+          <div class="lbl"><span>Landing</span><span class="pill" id="pL">—</span></div>
+          <div class="cg" id="cgL">—</div>
+          <div class="det" id="dL">—</div>
+        </div>
+      </div>
+      <ul class="msgs" id="msgs"></ul>
+      <div class="chart-wrap"><svg id="chart" viewBox="0 0 560 420" role="img" aria-label="Center of gravity moment envelope with takeoff and landing points"></svg></div>
+      <div class="legend">
+        <span><i style="background:var(--env)"></i>Normal category</span>
+        <span><i style="background:var(--util)"></i>Utility category</span>
+        <span><i style="background:var(--accent);height:8px;width:8px;border-radius:50%"></i>Takeoff → landing</span>
+      </div>
+      <div class="limits">
+        <h2>Limits used</h2>
+        <dl>
+          <dt>Normal</dt><dd>Fwd 35.0 in at 1950 lb or less, moving linearly to 40.5 in at 2500 lb. Aft 47.3 in. Max 2500 lb.</dd>
+          <dt>Utility</dt><dd>Fwd as normal. Aft 40.5 in. Max 2200 lb. Rear seat and baggage empty.</dd>
+          <dt>No rear seat</dt><dd>Same envelope. Uses its own empty weight and moment from the seat-removal W&amp;B change; rear passenger row removed.</dd>
+        </dl>
+      </div>
+    </section>
+  </div>
+
+  <footer>Built from the Cessna R172E / Army T-41B Flight Handbook (D432-M-S-1000, 9-23-66), Section III: sample loading problem, loading graph, and center of gravity moment envelope (pages 3-4 to 3-6). Station arms were derived from the sample problem and the envelope limits were read off the chart, so check both against your airplane's current weight and balance record before using this for a flight. The pilot in command remains responsible for the loading.</footer>
+</div>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const OIL_W=19, FUEL_LB=6, MAX_FUEL=46, MAX_BAG=200, MAX_N=2500, MAX_U=2200, AFT_N=47.3, AFT_U=40.5;
+  const fwd=w=>w<=1950?35.0:35.0+(w-1950)*(5.5/550);
+  const fields=["aOil","wFront","aFront","gFuel","aFuel","wRear","aRear","wBag","aBag","gBurn"];
+  const SAMPLE={ew:1551,em:59.8,aOil:-21,wFront:400,aFront:36,gFuel:46,aFuel:48,wRear:200,aRear:70,wBag:54,aBag:95,gBurn:20};
+  const KEY="r172e-wb-v1";
+  let cfg="std";
+  const emp={std:{ew:"1551",em:"59.8"},norear:{ew:"",em:""}};
+  try{const s=JSON.parse(localStorage.getItem(KEY)||"null"); if(s){
+    fields.forEach(f=>{ if(s[f]!==undefined&&s[f]!=="") $(f).value=s[f]; });
+    if(s.emp){ if(s.emp.std) emp.std=s.emp.std; if(s.emp.norear) emp.norear=s.emp.norear; }
+    else if(s.ew!==undefined){ emp.std={ew:s.ew,em:s.em}; }
+    if(s.cfg==="norear") cfg="norear";
+  }}catch(e){}
+  const noRearSet=()=>emp.norear.ew!==""&&emp.norear.em!=="";
+  function showEmpty(){
+    const src=(cfg==="norear"&&!noRearSet())?emp.std:emp[cfg];
+    $("ew").value=src.ew; $("em").value=src.em;
+  }
+  function setCfg(c){
+    cfg=c;
+    $("cfgStd").setAttribute("aria-checked",c==="std"); $("cfgNoRear").setAttribute("aria-checked",c==="norear");
+    $("rowRear").hidden=c==="norear";
+    $("cfgName").textContent=c==="std"?"Standard":"Rear seat removed";
+    $("ewLim").textContent=c==="std"?"From your airplane's W&B data sheet / FAA 337":"From the rear-seat-removal W&B change";
+    showEmpty(); calc();
+  }
+  const v=id=>{const n=parseFloat($(id).value);return isFinite(n)?n:0};
+  const f1=n=>n.toFixed(1), f2=n=>n.toFixed(2), f0=n=>Math.round(n).toLocaleString();
+
+  function check(w,cg,util){
+    const max=util?MAX_U:MAX_N, aft=util?AFT_U:AFT_N, lo=fwd(w);
+    return {ok:w<=max&&cg>=lo-1e-9&&cg<=aft+1e-9, over:w-max, fwdM:cg-lo, aftM:aft-cg, lo, aft};
+  }
+
+  function calc(){
+    const placeholder=cfg==="norear"&&!noRearSet();
+    $("ew").classList.toggle("placeholder",placeholder); $("em").classList.toggle("placeholder",placeholder);
+    const ew=v("ew"), em=v("em");
+    const mOil=OIL_W*v("aOil")/1000;
+    const wF=v("wFront"), mF=wF*v("aFront")/1000;
+    const gal=v("gFuel"), wFu=gal*FUEL_LB, mFu=wFu*v("aFuel")/1000;
+    const wR=cfg==="norear"?0:v("wRear"), mR=wR*v("aRear")/1000;
+    const wB=v("wBag"), mB=wB*v("aBag")/1000;
+    const tW=ew+OIL_W+wF+wFu+wR+wB, tM=em+mOil+mF+mFu+mR+mB, tA=tW?tM*1000/tW:0;
+    const burnG=Math.min(v("gBurn"),gal), wBu=burnG*FUEL_LB, mBu=wBu*v("aFuel")/1000;
+    const lW=tW-wBu, lM=tM-mBu, lA=lW?lM*1000/lW:0;
+
+    $("ewArm").textContent=ew?f1(em*1000/ew):"—";
+    $("mOil").textContent=f2(mOil); $("mFront").textContent=f2(mF);
+    $("wFuel").textContent=f0(wFu)+" lb"; $("mFuel").textContent=f2(mFu);
+    $("mRear").textContent=f2(mR); $("mBag").textContent=f2(mB);
+    $("tW").textContent=f0(tW); $("tA").textContent=f2(tA); $("tM").textContent=f2(tM);
+    $("aBurn").textContent="−"+f0(wBu)+" lb"; $("mBurn").textContent="−"+f2(mBu);
+    $("lW").textContent=f0(lW); $("lA").textContent=f2(lA); $("lM").textContent=f2(lM);
+
+    $("gFuel").classList.toggle("over",gal>MAX_FUEL);
+    $("wBag").classList.toggle("over",wB>MAX_BAG);
+    $("gBurn").classList.toggle("over",v("gBurn")>gal);
+
+    const utilEligible=wR===0&&wB===0;
+    const tN=check(tW,tA,false), lN=check(lW,lA,false);
+    const tU=check(tW,tA,true), lU=check(lW,lA,true);
+
+    function paint(prefix,w,cg,m,n,u){
+      $("cg"+prefix).innerHTML=f2(cg)+' <small>in CG</small>';
+      $("d"+prefix).textContent=f0(w)+" lb · "+f2(m)+" M/1000 · fwd margin "+f2(n.fwdM)+" · aft margin "+f2(n.aftM);
+      const p=$("p"+prefix);
+      p.className="pill "+(n.ok?"ok":"bad");
+      p.textContent=n.ok?(utilEligible&&u.ok?"NORMAL + UTILITY":"WITHIN LIMITS"):"OUT OF LIMITS";
+    }
+    paint("T",tW,tA,tM,tN,tU); paint("L",lW,lA,lM,lN,lU);
+
+    const msgs=[];
+    if(placeholder) msgs.push(["info","Rear seat removed: showing the standard empty weight as a placeholder. Enter the new empty weight and moment from the W&B change and they'll be saved for this configuration."]);
+    if(tN.over>0) msgs.push(["bad","Takeoff weight is "+f0(tN.over)+" lb over the 2500 lb maximum."]);
+    if(tA<tN.lo&&tW) msgs.push(["bad","Takeoff CG is "+f2(tN.lo-tA)+" in forward of the "+f2(tN.lo)+" in limit."]);
+    if(tA>AFT_N) msgs.push(["bad","Takeoff CG is "+f2(tA-AFT_N)+" in aft of the 47.3 in limit."]);
+    if(!(lA<lN.lo||lA>AFT_N)) {} else if(tN.ok) msgs.push(["bad","Landing CG ("+f2(lA)+" in) moves outside the envelope after burning "+burnG+" gal."]);
+    if(gal>MAX_FUEL) msgs.push(["bad","Fuel exceeds 46 gal usable."]);
+    if(wB>MAX_BAG) msgs.push(["bad","Baggage exceeds the 200 lb maximum."]);
+    if(v("gBurn")>gal) msgs.push(["info","Fuel burned is more than fuel loaded; landing uses "+gal+" gal burned."]);
+    if(utilEligible&&tN.ok&&!tU.ok) msgs.push(["info","Rear seat and baggage are empty, but this loading is outside the utility category (2200 lb, aft CG 40.5 in). No maneuvers."]);
+    if(utilEligible&&tU.ok) msgs.push(["info","Within utility category at takeoff: chandelles, lazy eights, steep turns, spins and stalls (except whip stalls) are approved per page 3-3."]);
+    if(!utilEligible) msgs.push(["info",cfg==="norear"?"Utility category maneuvers need the baggage area empty.":"Utility category maneuvers need the rear seat and baggage area empty."]);
+    $("msgs").innerHTML=msgs.map(([c,t])=>'<li class="'+c+'">'+t+'</li>').join("");
+
+    draw(tW,tM,lW,lM,tN.ok,lN.ok);
+    try{const o={cfg,emp};fields.forEach(f=>o[f]=$(f).value);localStorage.setItem(KEY,JSON.stringify(o));}catch(e){}
+  }
+
+  // chart
+  const X0=50,X1=120,Y0=1450,Y1=2600, L=56,R=544,T=16,B=360;
+  const sx=m=>L+(m-X0)/(X1-X0)*(R-L), sy=w=>B-(w-Y0)/(Y1-Y0)*(B-T);
+  function envPath(max,aft){
+    const pts=[];
+    for(let w=1500;w<=max+0.1;w+=10) pts.push([fwd(w)*w/1000,w]);
+    pts.push([aft*max/1000,max],[aft*1500/1000,1500]);
+    return "M"+pts.map(p=>sx(p[0]).toFixed(1)+","+sy(p[1]).toFixed(1)).join("L")+"Z";
+  }
+  function draw(tW,tM,lW,lM,tok,lok){
+    let s="";
+    for(let m=50;m<=120;m+=5) s+='<line x1="'+sx(m)+'" x2="'+sx(m)+'" y1="'+T+'" y2="'+B+'" stroke="var(--grid)" stroke-width="'+(m%10?0.6:1)+'"/>';
+    for(let w=1500;w<=2600;w+=50) s+='<line x1="'+L+'" x2="'+R+'" y1="'+sy(w)+'" y2="'+sy(w)+'" stroke="var(--grid)" stroke-width="'+(w%100?0.6:1)+'"/>';
+    for(let m=50;m<=120;m+=10) s+='<text x="'+sx(m)+'" y="'+(B+16)+'" text-anchor="middle">'+m+'</text>';
+    for(let w=1500;w<=2600;w+=100) s+='<text x="'+(L-6)+'" y="'+(sy(w)+4)+'" text-anchor="end">'+w+'</text>';
+    s+='<text class="axis-t" x="'+((L+R)/2)+'" y="'+(B+38)+'" text-anchor="middle">LOADED MOMENT / 1000 (LB-IN)</text>';
+    s+='<text class="axis-t" transform="translate(13,'+((T+B)/2)+') rotate(-90)" text-anchor="middle">LOADED WEIGHT (LB)</text>';
+    s+='<path d="'+envPath(MAX_N,AFT_N)+'" fill="var(--env-fill)" stroke="var(--env)" stroke-width="2"/>';
+    s+='<path d="'+envPath(MAX_U,AFT_U)+'" fill="none" stroke="var(--util)" stroke-width="1.6" stroke-dasharray="6 4"/>';
+    s+='<text x="'+sx(108)+'" y="'+sy(2460)+'" style="fill:var(--env)">NORMAL</text>';
+    s+='<text x="'+sx(83)+'" y="'+sy(2160)+'" style="fill:var(--util)">UTILITY</text>';
+    // CG reference rays
+    [35,40,45].forEach(cg=>{const w2=2600, m2=cg*w2/1000; if(m2<=X1) s+='<line x1="'+sx(cg*1500/1000)+'" y1="'+sy(1500)+'" x2="'+sx(m2)+'" y2="'+sy(w2)+'" stroke="var(--muted)" stroke-width="0.5" stroke-dasharray="2 3" opacity=".6"/><text x="'+(sx(m2)+3)+'" y="'+(sy(w2)+10)+'" style="font-size:10px">'+cg+'"</text>';});
+    s+='<line x1="'+L+'" x2="'+R+'" y1="'+B+'" y2="'+B+'" stroke="var(--muted)"/><line x1="'+L+'" x2="'+L+'" y1="'+T+'" y2="'+B+'" stroke="var(--muted)"/>';
+    const inb=(m,w)=>m>=X0&&m<=X1&&w>=Y0&&w<=Y1;
+    if(inb(tM,tW)&&inb(lM,lW)) s+='<line x1="'+sx(tM)+'" y1="'+sy(tW)+'" x2="'+sx(lM)+'" y2="'+sy(lW)+'" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 3"/>';
+    if(inb(lM,lW)) s+='<circle class="pt" cx="'+sx(lM)+'" cy="'+sy(lW)+'" r="5" fill="var(--paper)" stroke="'+(lok?'var(--accent)':'var(--bad)')+'" stroke-width="2"/><text x="'+(sx(lM)+9)+'" y="'+(sy(lW)+4)+'" style="fill:var(--ink)">LDG</text>';
+    if(inb(tM,tW)) s+='<circle class="pt" cx="'+sx(tM)+'" cy="'+sy(tW)+'" r="6" fill="'+(tok?'var(--accent)':'var(--bad)')+'"/><text x="'+(sx(tM)+9)+'" y="'+(sy(tW)-6)+'" style="fill:var(--ink);font-weight:600">T/O</text>';
+    $("chart").innerHTML=s;
+  }
+
+  fields.forEach(f=>$(f).addEventListener("input",calc));
+  ["ew","em"].forEach(f=>$(f).addEventListener("input",()=>{
+    if(cfg==="norear"&&!noRearSet()){ emp.norear={ew:$("ew").value,em:$("em").value}; }
+    else emp[cfg][f]=$(f).value;
+    calc();
+  }));
+  $("cfgStd").addEventListener("click",()=>setCfg("std"));
+  $("cfgNoRear").addEventListener("click",()=>setCfg("norear"));
+  $("clearBtn").addEventListener("click",()=>{["wFront","gFuel","wRear","wBag","gBurn"].forEach(f=>$(f).value=0);calc();});
+  $("sampleBtn").addEventListener("click",()=>{fields.forEach(f=>$(f).value=SAMPLE[f]);emp.std={ew:"1551",em:"59.8"};setCfg("std");});
+  setCfg(cfg);
+})();
+</script>
+<script>
+if('serviceWorker' in navigator && location.protocol==='https:'){navigator.serviceWorker.register('sw.js').catch(function(){});}
+</script>
+</body>
+</html>
