@@ -114,8 +114,8 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
     </div>
     <div class="spec">
       <span>Gross <b>2500 lb</b></span>
-      <span>Usable fuel <b>46 gal</b></span>
-      <span>Baggage <b>50 lb</b></span>
+      <span>Fuel <b>52 gal</b></span>
+      <span>Baggage <b>200 lb</b></span>
       <span>Utility <b>2200 lb</b></span>
     </div>
   </header>
@@ -150,8 +150,8 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
             <td class="num" id="mFront">—</td>
           </tr>
           <tr>
-            <td class="item">Fuel at 6 lb/gal<span class="lim">46 gal usable max</span></td>
-            <td><div class="gal"><input type="number" id="gFuel" inputmode="decimal" step="1" min="0" max="46" value="46" aria-label="Fuel gallons"><span>gal</span></div><div class="gal"><span id="wFuel">—</span></div></td>
+            <td class="item">Fuel at 6 lb/gal<span class="lim">52 gal tanks; 46 usable in all flight</span></td>
+            <td><div class="gal"><input type="number" id="gFuel" inputmode="decimal" step="1" min="0" max="52" value="46" aria-label="Fuel gallons"><span>gal</span></div><div class="gal"><span id="wFuel">—</span></div></td>
             <td><input type="number" class="arm" id="aFuel" step="0.1" value="48" aria-label="Fuel arm"></td>
             <td class="num" id="mFuel">—</td>
           </tr>
@@ -162,7 +162,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
             <td class="num" id="mRear">—</td>
           </tr>
           <tr>
-            <td class="item">Baggage<span class="lim">50 lb max (placard)</span></td>
+            <td class="item">Baggage<span class="lim">200 lb max</span></td>
             <td><input type="number" id="wBag" inputmode="decimal" step="1" min="0" value="54"></td>
             <td><input type="number" class="arm" id="aBag" step="0.1" value="95" aria-label="Baggage arm"></td>
             <td class="num" id="mBag">—</td>
@@ -227,7 +227,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
 <script>
 (function(){
   const $=id=>document.getElementById(id);
-  const OIL_W=19, FUEL_LB=6, MAX_FUEL=46, MAX_BAG=50, MAX_N=2500, MAX_U=2200, AFT_N=47.3, AFT_U=40.5;
+  const OIL_W=19, FUEL_LB=6, MAX_FUEL=52, MAX_BAG=200, MAX_N=2500, MAX_U=2200, AFT_N=47.3, AFT_U=40.5;
   const fwd=w=>w<=1950?35.0:35.0+(w-1950)*(5.5/550);
   const fields=["aOil","wFront","aFront","gFuel","aFuel","wRear","aRear","wBag","aBag","gBurn"];
   const SAMPLE={ew:1551,em:59.8,aOil:-21,wFront:400,aFront:36,gFuel:46,aFuel:48,wRear:200,aRear:70,wBag:54,aBag:95,gBurn:20};
@@ -305,8 +305,10 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
     if(tA<tN.lo&&tW) msgs.push(["bad","Takeoff CG is "+f2(tN.lo-tA)+" in forward of the "+f2(tN.lo)+" in limit."]);
     if(tA>AFT_N) msgs.push(["bad","Takeoff CG is "+f2(tA-AFT_N)+" in aft of the 47.3 in limit."]);
     if(!(lA<lN.lo||lA>AFT_N)) {} else if(tN.ok) msgs.push(["bad","Landing CG ("+f2(lA)+" in) moves outside the envelope after burning "+burnG+" gal."]);
-    if(gal>MAX_FUEL) msgs.push(["bad","Fuel exceeds 46 gal usable."]);
-    if(wB>MAX_BAG) msgs.push(["bad","Baggage exceeds the 50 lb placard limit."]);
+    if(gal>MAX_FUEL) msgs.push(["bad","Fuel exceeds the 52 gal tank capacity."]);
+    else if(gal>51) msgs.push(["info","52 gal includes 1 gal unusable fuel, which is normally already in the licensed empty weight. Enter 51 if yours includes it."]);
+    else if(gal>46) msgs.push(["info","Fuel above 46 gal includes up to 5 gal that is usable in level flight only (handbook page 2-1)."]);
+    if(wB>MAX_BAG) msgs.push(["bad","Baggage exceeds the 200 lb maximum."]);
     if(v("gBurn")>gal) msgs.push(["info","Fuel burned is more than fuel loaded; landing uses "+gal+" gal burned."]);
     if(utilEligible&&tN.ok&&!tU.ok) msgs.push(["info","Rear seat and baggage are empty, but this loading is outside the utility category (2200 lb, aft CG 40.5 in). No maneuvers."]);
     if(utilEligible&&tU.ok) msgs.push(["info","Within utility category at takeoff: chandelles, lazy eights, steep turns, spins and stalls (except whip stalls) are approved per page 3-3."]);
