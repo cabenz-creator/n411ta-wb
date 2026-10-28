@@ -1,5 +1,5 @@
 // Caches the worksheet so it opens with no connection.
-const CACHE = 'r172e-wb-v2';
+const CACHE = 'r172e-wb-v3';
 const FILES = ['./', './index.html', './manifest.webmanifest',
   './apple-touch-icon.png', './icon-192.png'];
 self.addEventListener('install', e => {
