@@ -138,16 +138,22 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
             <td><input type="number" id="em" inputmode="decimal" step="0.01" value="59.8" aria-label="Empty moment/1000"></td>
           </tr>
           <tr>
-            <td class="item">Oil, 10 qt<span class="lim">Full oil assumed</span></td>
-            <td class="num">19</td>
+            <td class="item">Oil at 1.9 lb/qt<span class="lim">10 qt max</span></td>
+            <td><div class="gal"><input type="number" id="qOil" inputmode="decimal" step="0.5" min="0" max="10" value="10" aria-label="Oil quarts"><span>qt</span></div><div class="gal"><span id="wOil">—</span></div></td>
             <td><input type="number" class="arm" id="aOil" step="0.1" value="-21" aria-label="Oil arm"></td>
             <td class="num" id="mOil">—</td>
           </tr>
           <tr>
-            <td class="item">Pilot &amp; front passenger</td>
-            <td><input type="number" id="wFront" inputmode="decimal" step="1" min="0" value="400"></td>
-            <td><input type="number" class="arm" id="aFront" step="0.1" value="36" aria-label="Front seat arm"></td>
-            <td class="num" id="mFront">—</td>
+            <td class="item">Pilot</td>
+            <td><input type="number" id="wPilot" inputmode="decimal" step="1" min="0" value="200"></td>
+            <td><input type="number" class="arm" id="aPilot" step="0.1" value="36" aria-label="Pilot arm"></td>
+            <td class="num" id="mPilot">—</td>
+          </tr>
+          <tr>
+            <td class="item">Copilot / front passenger</td>
+            <td><input type="number" id="wCop" inputmode="decimal" step="1" min="0" value="200"></td>
+            <td><input type="number" class="arm" id="aCop" step="0.1" value="36" aria-label="Copilot arm"></td>
+            <td class="num" id="mCop">—</td>
           </tr>
           <tr>
             <td class="item">Fuel at 6 lb/gal<span class="lim">52 gal tanks; 46 usable in all flight</span></td>
@@ -155,11 +161,23 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
             <td><input type="number" class="arm" id="aFuel" step="0.1" value="48" aria-label="Fuel arm"></td>
             <td class="num" id="mFuel">—</td>
           </tr>
-          <tr id="rowRear">
-            <td class="item">Rear passengers</td>
-            <td><input type="number" id="wRear" inputmode="decimal" step="1" min="0" value="200"></td>
-            <td><input type="number" class="arm" id="aRear" step="0.1" value="70" aria-label="Rear seat arm"></td>
-            <td class="num" id="mRear">—</td>
+          <tr class="rowRear">
+            <td class="item">Rear passenger 1</td>
+            <td><input type="number" id="wRear1" inputmode="decimal" step="1" min="0" value="100"></td>
+            <td><input type="number" class="arm" id="aRear1" step="0.1" value="70" aria-label="Rear passenger 1 arm"></td>
+            <td class="num" id="mRear1">—</td>
+          </tr>
+          <tr class="rowRear">
+            <td class="item">Rear passenger 2</td>
+            <td><input type="number" id="wRear2" inputmode="decimal" step="1" min="0" value="100"></td>
+            <td><input type="number" class="arm" id="aRear2" step="0.1" value="70" aria-label="Rear passenger 2 arm"></td>
+            <td class="num" id="mRear2">—</td>
+          </tr>
+          <tr class="rowLoad" hidden>
+            <td class="item">Passenger load area<span class="lim">Arm from the seat-removal W&amp;B change</span></td>
+            <td><input type="number" id="wLoad" inputmode="decimal" step="1" min="0" value="0"></td>
+            <td><input type="number" class="arm" id="aLoad" step="0.1" value="70" aria-label="Passenger load area arm"></td>
+            <td class="num" id="mLoad">—</td>
           </tr>
           <tr>
             <td class="item">Baggage<span class="lim">200 lb max</span></td>
@@ -215,7 +233,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
         <dl>
           <dt>Normal</dt><dd>Fwd 35.0 in at 1950 lb or less, moving linearly to 40.5 in at 2500 lb. Aft 47.3 in. Max 2500 lb.</dd>
           <dt>Utility</dt><dd>Fwd as normal. Aft 40.5 in. Max 2200 lb. Rear seat and baggage empty.</dd>
-          <dt>No rear seat</dt><dd>Same envelope. Uses its own empty weight and moment from the seat-removal W&amp;B change; rear passenger row removed.</dd>
+          <dt>No rear seat</dt><dd>Same envelope. Uses its own empty weight and moment from the seat-removal W&amp;B change; the two rear passenger lines are replaced by a single passenger load area line.</dd>
         </dl>
       </div>
     </section>
@@ -227,10 +245,10 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
 <script>
 (function(){
   const $=id=>document.getElementById(id);
-  const OIL_W=19, FUEL_LB=6, MAX_FUEL=52, MAX_BAG=200, MAX_N=2500, MAX_U=2200, AFT_N=47.3, AFT_U=40.5;
+  const OIL_LB=1.9, MAX_OIL=10, FUEL_LB=6, MAX_FUEL=52, MAX_BAG=200, MAX_N=2500, MAX_U=2200, AFT_N=47.3, AFT_U=40.5;
   const fwd=w=>w<=1950?35.0:35.0+(w-1950)*(5.5/550);
-  const fields=["aOil","wFront","aFront","gFuel","aFuel","wRear","aRear","wBag","aBag","gBurn"];
-  const SAMPLE={ew:1551,em:59.8,aOil:-21,wFront:400,aFront:36,gFuel:46,aFuel:48,wRear:200,aRear:70,wBag:54,aBag:95,gBurn:20};
+  const fields=["qOil","aOil","wPilot","aPilot","wCop","aCop","gFuel","aFuel","wRear1","aRear1","wRear2","aRear2","wLoad","aLoad","wBag","aBag","gBurn"];
+  const SAMPLE={ew:1551,em:59.8,qOil:10,aOil:-21,wPilot:200,aPilot:36,wCop:200,aCop:36,gFuel:46,aFuel:48,wRear1:100,aRear1:70,wRear2:100,aRear2:70,wLoad:0,aLoad:70,wBag:54,aBag:95,gBurn:20};
   const KEY="r172e-wb-v1";
   let cfg="std";
   const emp={std:{ew:"1551",em:"59.8"},norear:{ew:"",em:""}};
@@ -248,7 +266,8 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
   function setCfg(c){
     cfg=c;
     $("cfgStd").setAttribute("aria-checked",c==="std"); $("cfgNoRear").setAttribute("aria-checked",c==="norear");
-    $("rowRear").hidden=c==="norear";
+    document.querySelectorAll(".rowRear").forEach(r=>r.hidden=c==="norear");
+    document.querySelectorAll(".rowLoad").forEach(r=>r.hidden=c!=="norear");
     $("cfgName").textContent=c==="std"?"Standard":"Rear seat removed";
     $("ewLim").textContent=c==="std"?"From your airplane's W&B data sheet / FAA 337":"From the rear-seat-removal W&B change";
     showEmpty(); calc();
@@ -265,19 +284,20 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
     const placeholder=cfg==="norear"&&!noRearSet();
     $("ew").classList.toggle("placeholder",placeholder); $("em").classList.toggle("placeholder",placeholder);
     const ew=v("ew"), em=v("em");
-    const mOil=OIL_W*v("aOil")/1000;
-    const wF=v("wFront"), mF=wF*v("aFront")/1000;
+    const OIL_W=v("qOil")*OIL_LB, mOil=OIL_W*v("aOil")/1000;
+    $("wOil").textContent=f1(OIL_W)+" lb"; $("qOil").classList.toggle("over",v("qOil")>MAX_OIL);
+    const wP=v("wPilot"), mP=wP*v("aPilot")/1000, wC=v("wCop"), mC=wC*v("aCop")/1000, wF=wP+wC, mF=mP+mC;
     const gal=v("gFuel"), wFu=gal*FUEL_LB, mFu=wFu*v("aFuel")/1000;
-    const wR=cfg==="norear"?0:v("wRear"), mR=wR*v("aRear")/1000;
+    const nr=cfg==="norear", wR1=nr?0:v("wRear1"), mR1=wR1*v("aRear1")/1000, wR2=nr?0:v("wRear2"), mR2=wR2*v("aRear2")/1000, wL=nr?v("wLoad"):0, mL=wL*v("aLoad")/1000, wR=wR1+wR2+wL, mR=mR1+mR2+mL;
     const wB=v("wBag"), mB=wB*v("aBag")/1000;
     const tW=ew+OIL_W+wF+wFu+wR+wB, tM=em+mOil+mF+mFu+mR+mB, tA=tW?tM*1000/tW:0;
     const burnG=Math.min(v("gBurn"),gal), wBu=burnG*FUEL_LB, mBu=wBu*v("aFuel")/1000;
     const lW=tW-wBu, lM=tM-mBu, lA=lW?lM*1000/lW:0;
 
     $("ewArm").textContent=ew?f1(em*1000/ew):"—";
-    $("mOil").textContent=f2(mOil); $("mFront").textContent=f2(mF);
+    $("mOil").textContent=f2(mOil); $("mPilot").textContent=f2(mP); $("mCop").textContent=f2(mC);
     $("wFuel").textContent=f0(wFu)+" lb"; $("mFuel").textContent=f2(mFu);
-    $("mRear").textContent=f2(mR); $("mBag").textContent=f2(mB);
+    $("mRear1").textContent=f2(mR1); $("mRear2").textContent=f2(mR2); $("mLoad").textContent=f2(mL); $("mBag").textContent=f2(mB);
     $("tW").textContent=f0(tW); $("tA").textContent=f2(tA); $("tM").textContent=f2(tM);
     $("aBurn").textContent="−"+f0(wBu)+" lb"; $("mBurn").textContent="−"+f2(mBu);
     $("lW").textContent=f0(lW); $("lA").textContent=f2(lA); $("lM").textContent=f2(lM);
@@ -308,11 +328,12 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
     if(gal>MAX_FUEL) msgs.push(["bad","Fuel exceeds the 52 gal tank capacity."]);
     else if(gal>51) msgs.push(["info","52 gal includes 1 gal unusable fuel, which is normally already in the licensed empty weight. Enter 51 if yours includes it."]);
     else if(gal>46) msgs.push(["info","Fuel above 46 gal includes up to 5 gal that is usable in level flight only (handbook page 2-1)."]);
+    if(v("qOil")>MAX_OIL) msgs.push(["bad","Oil exceeds the 10 qt capacity."]);
     if(wB>MAX_BAG) msgs.push(["bad","Baggage exceeds the 200 lb maximum."]);
     if(v("gBurn")>gal) msgs.push(["info","Fuel burned is more than fuel loaded; landing uses "+gal+" gal burned."]);
     if(utilEligible&&tN.ok&&!tU.ok) msgs.push(["info","Rear seat and baggage are empty, but this loading is outside the utility category (2200 lb, aft CG 40.5 in). No maneuvers."]);
     if(utilEligible&&tU.ok) msgs.push(["info","Within utility category at takeoff: chandelles, lazy eights, steep turns, spins and stalls (except whip stalls) are approved per page 3-3."]);
-    if(!utilEligible) msgs.push(["info",cfg==="norear"?"Utility category maneuvers need the baggage area empty.":"Utility category maneuvers need the rear seat and baggage area empty."]);
+    if(!utilEligible) msgs.push(["info",cfg==="norear"?"Utility category maneuvers need the passenger load area and baggage area empty.":"Utility category maneuvers need the rear seat and baggage area empty."]);
     $("msgs").innerHTML=msgs.map(([c,t])=>'<li class="'+c+'">'+t+'</li>').join("");
 
     draw(tW,tM,lW,lM,tN.ok,lN.ok);
@@ -358,7 +379,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
   }));
   $("cfgStd").addEventListener("click",()=>setCfg("std"));
   $("cfgNoRear").addEventListener("click",()=>setCfg("norear"));
-  $("clearBtn").addEventListener("click",()=>{["wFront","gFuel","wRear","wBag","gBurn"].forEach(f=>$(f).value=0);calc();});
+  $("clearBtn").addEventListener("click",()=>{["wPilot","wCop","gFuel","wRear1","wRear2","wLoad","wBag","gBurn"].forEach(f=>$(f).value=0);calc();});
   $("sampleBtn").addEventListener("click",()=>{fields.forEach(f=>$(f).value=SAMPLE[f]);emp.std={ew:"1551",em:"59.8"};setCfg("std");});
   setCfg(cfg);
 })();
