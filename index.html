@@ -6,13 +6,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="N411TA W&amp;B">
+<meta name="apple-mobile-web-app-title" content="N411TA">
 <meta name="theme-color" content="#eef1f3" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0f161d" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png">
-<title>R172E Weight &amp; Balance</title>
+<title>N411TA</title>
 <style>
 :root{color-scheme:light}
 /* Layout: handbook-style load sheet (left) beside a live CG moment envelope (right); stacks on phones */
@@ -93,6 +93,30 @@ svg .axis-t{font-family:var(--display);font-size:12px;letter-spacing:.08em;fill:
 .seg button small{display:block;font-family:var(--body);font-weight:400;font-size:11.5px;letter-spacing:0;color:var(--muted)}
 input.placeholder{border-color:var(--accent);border-style:dashed;background:var(--accent-soft)}
 .cfgtag{color:var(--accent)}
+[hidden]{display:none!important}
+.tabs{display:flex;flex-wrap:wrap;gap:3px;border:1px solid var(--rule);border-radius:6px;padding:3px;background:var(--paper)}
+.tabs a{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.03em;padding:8px 14px;border-radius:4px;color:var(--muted);text-decoration:none}
+.tabs a:hover{color:var(--ink)}
+.tabs a[aria-current="page"]{background:var(--ink);color:var(--paper)}
+.tabs a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.viewhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 20px;margin-bottom:16px}
+.vt{font-family:var(--display);font-weight:700;font-size:24px;letter-spacing:.01em;text-transform:none;color:var(--ink);margin:0}
+.cols2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:22px;align-items:start;margin-bottom:22px}
+table.kv td{font-size:14px}
+table.kv td:last-child{font-family:var(--mono);font-size:13px;text-align:right}
+table.kv tr.grp td{font-family:var(--display);font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:12px;color:var(--accent);padding-top:14px;text-align:left}
+table.vs td.big{font-family:var(--mono);font-size:19px;font-weight:600;white-space:nowrap}
+table.vs .sym{font-family:var(--mono);font-weight:600;color:var(--accent);margin-right:2px}
+table.vs .sym sub{font-size:.7em}
+table.grid-t td,table.grid-t th{text-align:center;font-family:var(--mono)}
+table.grid-t td:first-child,table.grid-t th:first-child{text-align:left;font-family:var(--body)}
+.tape-panel{margin-bottom:22px}
+.tape-wrap{overflow-x:auto}
+#tape{min-width:0}
+#tape text{font-family:var(--mono);font-size:17px;fill:var(--muted)}
+#tape .lbl{font-family:var(--display);font-size:19px;font-weight:600;fill:var(--ink)}
+@media (max-width:480px){.tabs{width:100%}.tabs a{flex:1;text-align:center;padding:8px 6px;font-size:14px}table.vs td.big{font-size:16px}}
+.note.conv{border-left:3px solid var(--accent);background:var(--accent-soft);color:var(--ink);padding:10px 12px;border-radius:4px;margin:0 0 18px;max-width:none}
 footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
 @media (prefers-reduced-motion:no-preference){circle.pt{transition:cx .25s,cy .25s}}
 @media (max-width:480px){.results{grid-template-columns:minmax(0,1fr)}
@@ -110,15 +134,25 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
   <header>
     <div>
       <div class="eyebrow">Cessna R172E · Army T-41B</div>
-      <h1>Weight &amp; Balance Worksheet</h1>
+      <h1>N411TA</h1>
     </div>
+    <nav class="tabs" aria-label="Pages">
+      <a href="#wb" aria-current="page">W&amp;B</a>
+      <a href="#specs">Specs</a>
+      <a href="#vspeeds">V-Speeds</a>
+    </nav>
+  </header>
+
+  <section class="view" id="view-wb">
+  <div class="viewhead">
+    <h2 class="vt">Weight &amp; Balance</h2>
     <div class="spec">
       <span>Gross <b>2500 lb</b></span>
       <span>Fuel <b>52 gal</b></span>
       <span>Baggage <b>200 lb</b></span>
       <span>Utility <b>2200 lb</b></span>
     </div>
-  </header>
+  </div>
 
   <div class="grid">
     <section class="panel" aria-labelledby="load-h">
@@ -138,7 +172,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
             <td><input type="number" id="em" inputmode="decimal" step="0.01" value="59.8" aria-label="Empty moment/1000"></td>
           </tr>
           <tr>
-            <td class="item">Oil at 1.9 lb/qt<span class="lim">10 qt max</span></td>
+            <td class="item">Oil at 1.9 lb/qt<span class="lim">7 qt min, 10 qt max</span></td>
             <td><div class="gal"><input type="number" id="qOil" inputmode="decimal" step="0.5" min="0" max="10" value="10" aria-label="Oil quarts"><span>qt</span></div><div class="gal"><span id="wOil">—</span></div></td>
             <td><input type="number" class="arm" id="aOil" step="0.1" value="-21" aria-label="Oil arm"></td>
             <td class="num" id="mOil">—</td>
@@ -240,6 +274,143 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
   </div>
 
   <footer>Built from the Cessna R172E / Army T-41B Flight Handbook (D432-M-S-1000, 9-23-66), Section III: sample loading problem, loading graph, and center of gravity moment envelope (pages 3-4 to 3-6). Station arms were derived from the sample problem and the envelope limits were read off the chart, so check both against your airplane's current weight and balance record before using this for a flight. The pilot in command remains responsible for the loading.</footer>
+  </section>
+
+  <section class="view" id="view-specs" hidden>
+    <div class="viewhead"><h2 class="vt">Specs</h2><div class="spec"><span>Handbook <b>D432-M-S-1000</b></span><span><b>9-23-66</b></span></div></div>
+    <p class="note conv">N411TA has a Lycoming O-360-A1A with a modified 80 in propeller. The power, fuel grade, oil and performance figures below are the handbook's values for the original IO-360-D. Where the conversion's flight manual supplement differs, the supplement governs.</p>
+    <div class="cols2">
+      <div class="panel">
+        <h2>Performance &amp; specifications</h2>
+        <div class="tbl-wrap"><table class="kv"><tbody>
+          <tr><td>Gross weight</td><td>2500 lb</td></tr>
+          <tr class="grp"><td colspan="2">Speed</td></tr>
+          <tr><td>Top speed at sea level</td><td>153 mph</td></tr>
+          <tr><td>Cruise, 75% power at 5500 ft</td><td>148 mph</td></tr>
+          <tr class="grp"><td colspan="2">Range (46 gal, no reserve)</td></tr>
+          <tr><td>Cruise, 75% power at 5500 ft</td><td>590 mi · 4.0 hr · 147 mph</td></tr>
+          <tr><td>Optimum range at 10,000 ft</td><td>800 mi · 7.7 hr · 104 mph</td></tr>
+          <tr class="grp"><td colspan="2">Climb &amp; ceiling</td></tr>
+          <tr><td>Rate of climb at sea level</td><td>910 ft/min</td></tr>
+          <tr><td>Service ceiling</td><td>17,500 ft</td></tr>
+          <tr class="grp"><td colspan="2">Takeoff</td></tr>
+          <tr><td>Ground run (sod runway)</td><td>635 ft</td></tr>
+          <tr><td>Total over 50 ft obstacle</td><td>1045 ft</td></tr>
+          <tr class="grp"><td colspan="2">Landing</td></tr>
+          <tr><td>Landing roll (sod runway)</td><td>400 ft</td></tr>
+          <tr><td>Total over 50 ft obstacle</td><td>860 ft</td></tr>
+          <tr class="grp"><td colspan="2">Weights &amp; loading</td></tr>
+          <tr><td>Empty weight (approximate)</td><td>1550 lb</td></tr>
+          <tr><td>Baggage</td><td>200 lb</td></tr>
+          <tr><td>Wing loading</td><td>14.3 lb/sq ft</td></tr>
+          <tr><td>Power loading</td><td>11.9 lb/hp</td></tr>
+          <tr class="grp"><td colspan="2">Capacities</td></tr>
+          <tr><td>Fuel, total</td><td>52 gal</td></tr>
+          <tr><td>Oil, total</td><td>10 qt</td></tr>
+          <tr class="grp"><td colspan="2">Powerplant</td></tr>
+          <tr><td>Engine, installed</td><td>Lycoming O-360-A1A</td></tr>
+          <tr><td>Propeller, installed</td><td>80 in, modified</td></tr>
+          <tr><td>Original engine</td><td>Continental IO-360-D, 210 hp at 2800 RPM</td></tr>
+          <tr><td>Original propeller</td><td>Constant speed, 76 in</td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="panel">
+        <h2>Servicing requirements</h2>
+        <div class="tbl-wrap"><table class="kv"><tbody>
+          <tr class="grp"><td colspan="2">Fuel</td></tr>
+          <tr><td>Grade</td><td>115/145 (MIL-G-5572)</td></tr>
+          <tr><td>Alternate</td><td>100/130 minimum</td></tr>
+          <tr><td>Capacity each tank</td><td>26 gal</td></tr>
+          <tr><td>Usable, all flight conditions</td><td>23 gal each</td></tr>
+          <tr><td>Additional usable, level flight</td><td>2.5 gal each</td></tr>
+          <tr class="grp"><td colspan="2">Engine oil</td></tr>
+          <tr><td>Military</td><td>MIL-L-22851 Type II above 30°F, Type III below 30°F</td></tr>
+          <tr><td>Commercial</td><td>SAE 50 above 30°F; SAE 10W30 or SAE 30 below 30°F</td></tr>
+          <tr><td>Type</td><td>Detergent or dispersant to Continental MHS-24 (must be used)</td></tr>
+          <tr><td>Sump capacity</td><td>10 qt</td></tr>
+          <tr><td>Minimum to operate</td><td>7 qt</td></tr>
+          <tr><td>Normal flights under 3 hr</td><td>Fill to 8 qt</td></tr>
+          <tr><td>Extended flight</td><td>Fill to 10 qt</td></tr>
+          <tr class="grp"><td colspan="2">Other</td></tr>
+          <tr><td>Hydraulic fluid</td><td>MIL-H-5606</td></tr>
+          <tr><td>Tire pressure, nose</td><td>26 psi</td></tr>
+          <tr><td>Tire pressure, mains</td><td>24 psi</td></tr>
+          <tr><td>Nose strut</td><td>Filled with fluid, 35 psi</td></tr>
+        </tbody></table></div>
+      </div>
+    </div>
+    <footer>From the Performance-Specifications and Servicing Requirements pages inside the front cover of the R172E / T-41B Flight Handbook. Figures are for a new airplane in standard conditions.</footer>
+  </section>
+
+  <section class="view" id="view-vspeeds" hidden>
+    <div class="viewhead"><h2 class="vt">V-Speeds</h2><div class="spec"><span>Airspeed indicator <b>MPH</b></span><span>At <b>2500 lb</b></span></div></div>
+    <div class="panel tape-panel">
+      <h2>Airspeed indicator markings</h2>
+      <div class="tape-wrap"><svg id="tape" viewBox="0 0 640 120" role="img" aria-label="Airspeed indicator arcs: white 56 to 100, green 64 to 145, yellow 145 to 182, red line 182 mph"></svg></div>
+    </div>
+    <div class="cols2">
+      <div class="panel">
+        <h2>Limits · calibrated airspeed</h2>
+        <div class="tbl-wrap"><table class="vs"><thead><tr><th>Speed</th><th>MPH</th><th>KT</th></tr></thead><tbody>
+          <tr><td class="item"><span class="sym">V<sub>NE</sub></span> Never exceed<span class="lim">Red line. Glide or dive, smooth air</span></td><td class="big">182</td><td class="num">158</td></tr>
+          <tr><td class="item"><span class="sym">V<sub>NO</sub></span> Max structural cruising<span class="lim">Top of green arc. 145–182 caution range</span></td><td class="big">145</td><td class="num">126</td></tr>
+          <tr><td class="item"><span class="sym">V<sub>A</sub></span> Maneuvering<span class="lim">Abrupt full control travel at 2500 lb</span></td><td class="big">127</td><td class="num">110</td></tr>
+          <tr><td class="item"><span class="sym">V<sub>FE</sub></span> Max flap extended<span class="lim">Top of white arc</span></td><td class="big">100</td><td class="num">87</td></tr>
+          <tr><td class="item"><span class="sym">V<sub>S1</sub></span> Stall, flaps up<span class="lim">Bottom of green arc</span></td><td class="big">64</td><td class="num">56</td></tr>
+          <tr><td class="item"><span class="sym">V<sub>SO</sub></span> Stall, landing flaps<span class="lim">Bottom of white arc. 53 mph at 40° in stall table</span></td><td class="big">56</td><td class="num">49</td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="panel">
+        <h2>Takeoff &amp; climb · indicated</h2>
+        <div class="tbl-wrap"><table class="vs"><thead><tr><th>Speed</th><th>MPH</th><th>KT</th></tr></thead><tbody>
+          <tr><td class="item"><span class="sym">V<sub>R</sub></span> Rotate<span class="lim">Lift nose wheel, normal takeoff, flaps 0°</span></td><td class="big">60</td><td class="num">52</td></tr>
+          <tr><td class="item"><span class="sym">V<sub>X</sub></span> Best angle, flaps up<span class="lim">Full throttle, 2800 RPM, all altitudes</span></td><td class="big">75</td><td class="num">65</td></tr>
+          <tr><td class="item">Obstacle climb, flaps 20°<span class="lim">Max performance takeoff, obstacles ahead</span></td><td class="big">60</td><td class="num">52</td></tr>
+          <tr><td class="item"><span class="sym">V<sub>Y</sub></span> Best rate<span class="lim">Sea level to 10,000 ft, full throttle, 2800 RPM</span></td><td class="big">95 → 87</td><td class="num">83 → 76</td></tr>
+          <tr><td class="item">Normal takeoff climb<span class="lim">Flaps 0°</span></td><td class="big">85</td><td class="num">74</td></tr>
+          <tr><td class="item">Cruise climb<span class="lim">25 in MP, 2600 RPM, 13 gal/hr</span></td><td class="big">90–100</td><td class="num">78–87</td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="panel">
+        <h2>Approach, landing &amp; glide · indicated</h2>
+        <div class="tbl-wrap"><table class="vs"><thead><tr><th>Speed</th><th>MPH</th><th>KT</th></tr></thead><tbody>
+          <tr><td class="item"><span class="sym">V<sub>G</sub></span> Best glide<span class="lim">Flaps up, prop windmilling. About 1.7 sm per 1000 ft</span></td><td class="big">85</td><td class="num">74</td></tr>
+          <tr><td class="item">Approach, flaps up<span class="lim">Before landing checklist</span></td><td class="big">70–80</td><td class="num">61–70</td></tr>
+          <tr><td class="item">Approach, flaps down<span class="lim">Before landing checklist</span></td><td class="big">65–75</td><td class="num">56–65</td></tr>
+          <tr><td class="item">Short field approach<span class="lim">Flaps 40°. No slips with full flaps</span></td><td class="big">60</td><td class="num">52</td></tr>
+          <tr><td class="item">Max demonstrated crosswind<span class="lim">15 knots per handbook</span></td><td class="big">17</td><td class="num">15</td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="panel">
+        <h2>Utility category · 2200 lb</h2>
+        <div class="tbl-wrap"><table class="vs"><thead><tr><th>Maneuver</th><th>MPH</th><th>KT</th></tr></thead><tbody>
+          <tr><td class="item">Chandelles, lazy eights, steep turns<span class="lim">Max entry speed</span></td><td class="big">127</td><td class="num">110</td></tr>
+          <tr><td class="item">Spins, stalls (no whip stalls)<span class="lim">Slow deceleration entry</span></td><td class="big">Slow</td><td class="num">—</td></tr>
+        </tbody></table></div>
+        <p class="note">Load factors: flaps up +4.4 / −1.76, flaps down +3.5. Rear seat and baggage area empty.</p>
+      </div>
+    </div>
+    <div class="cols2">
+      <div class="panel">
+        <h2>Power-off stall speeds · mph CAS · 2500 lb</h2>
+        <div class="tbl-wrap"><table class="grid-t"><thead><tr><th>Bank</th><th>0°</th><th>20°</th><th>40°</th><th>60°</th></tr></thead><tbody>
+          <tr><td>Flaps up</td><td>64</td><td>66</td><td>73</td><td>90</td></tr>
+          <tr><td>Flaps 20°</td><td>58</td><td>60</td><td>67</td><td>83</td></tr>
+          <tr><td>Flaps 40°</td><td>53</td><td>55</td><td>60</td><td>75</td></tr>
+        </tbody></table></div>
+        <p class="note">Stall horn sounds 5 to 10 mph above the stall in all configurations.</p>
+      </div>
+      <div class="panel">
+        <h2>Airspeed correction · IAS to CAS, mph</h2>
+        <div class="tbl-wrap"><table class="grid-t"><thead><tr><th>IAS</th><th>50</th><th>60</th><th>70</th><th>80</th><th>90</th><th>100</th><th>120</th><th>150</th></tr></thead><tbody>
+          <tr><td>Flaps up</td><td>60</td><td>64</td><td>69</td><td>77</td><td>86</td><td>96</td><td>116</td><td>147</td></tr>
+          <tr><td>Flaps down</td><td>59</td><td>63</td><td>71</td><td>80</td><td>88</td><td>98</td><td>—</td><td>—</td></tr>
+        </tbody></table></div>
+        <p class="note">Limit speeds are calibrated. Procedure speeds are indicated.</p>
+      </div>
+    </div>
+    <footer>From the R172E / T-41B Flight Handbook: Section I checklists (pages 1-2 to 1-4), climb and takeoff notes (2-12, 2-13), airspeed limitations and utility category (3-2, 3-3), and Section V figures 5-1, 5-2 and 5-6. Knots are converted from mph and rounded. Climb and glide speeds assume the original IO-360-D; check the O-360-A1A conversion supplement for any changes.</footer>
+  </section>
 </div>
 
 <script>
@@ -329,6 +500,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
     else if(gal>51) msgs.push(["info","52 gal includes 1 gal unusable fuel, which is normally already in the licensed empty weight. Enter 51 if yours includes it."]);
     else if(gal>46) msgs.push(["info","Fuel above 46 gal includes up to 5 gal that is usable in level flight only (handbook page 2-1)."]);
     if(v("qOil")>MAX_OIL) msgs.push(["bad","Oil exceeds the 10 qt capacity."]);
+    else if(v("qOil")<7) msgs.push(["bad","Handbook: do not operate on less than 7 qt of oil."]);
     if(wB>MAX_BAG) msgs.push(["bad","Baggage exceeds the 200 lb maximum."]);
     if(v("gBurn")>gal) msgs.push(["info","Fuel burned is more than fuel loaded; landing uses "+gal+" gal burned."]);
     if(utilEligible&&tN.ok&&!tU.ok) msgs.push(["info","Rear seat and baggage are empty, but this loading is outside the utility category (2200 lb, aft CG 40.5 in). No maneuvers."]);
@@ -382,6 +554,27 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
   $("clearBtn").addEventListener("click",()=>{["wPilot","wCop","gFuel","wRear1","wRear2","wLoad","wBag","gBurn"].forEach(f=>$(f).value=0);calc();});
   $("sampleBtn").addEventListener("click",()=>{fields.forEach(f=>$(f).value=SAMPLE[f]);emp.std={ew:"1551",em:"59.8"};setCfg("std");});
   setCfg(cfg);
+})();
+(function(){
+  const views=["wb","specs","vspeeds"];
+  function route(){
+    const h=(location.hash||"").slice(1), cur=views.includes(h)?h:"wb";
+    views.forEach(x=>{document.getElementById("view-"+x).hidden=x!==cur;
+      const a=document.querySelector('.tabs a[href="#'+x+'"]'); if(a){ if(x===cur) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); }});
+  }
+  addEventListener("hashchange",()=>{route();scrollTo(0,0);}); route();
+  const svg=document.getElementById("tape"); if(!svg) return;
+  const lo=40,hi=190,L=20,Rr=620,x=m=>L+(m-lo)/(hi-lo)*(Rr-L);
+  let s="";
+  const band=(a,b,y,h,col)=>'<rect x="'+x(a)+'" y="'+y+'" width="'+(x(b)-x(a))+'" height="'+h+'" fill="'+col+'" rx="2"/>';
+  s+=band(56,100,58,10,"var(--ink)")+band(56,100,59,8,"var(--paper)");
+  s+=band(64,145,46,12,"var(--ok)")+band(145,182,46,12,"#d9a21b");
+  s+='<rect x="'+(x(182)-2)+'" y="40" width="4" height="30" fill="var(--bad)"/>';
+  for(let m=40;m<=190;m+=10){s+='<line x1="'+x(m)+'" x2="'+x(m)+'" y1="72" y2="'+(m%20?77:81)+'" stroke="var(--muted)"/>'; if(m%20===0) s+='<text x="'+x(m)+'" y="100" text-anchor="middle">'+m+'</text>';}
+  [[56,"56",0],[64,"64",0],[100,"100",0],[145,"145",0],[182,"182",0]].forEach(([m,t])=>{s+='<text class="lbl" x="'+x(m)+'" y="36" text-anchor="middle">'+t+'</text>';});
+  [[75,"Vx"],[95,"Vy"],[85,"Vg"],[127,"Va"]].forEach(([m,t])=>{s+='<path d="M'+x(m)+' 108 l-6 10 h12 z" fill="var(--accent)"/><text x="'+x(m)+'" y="138" text-anchor="middle" style="fill:var(--accent);font-weight:600">'+t+'</text>';});
+  svg.setAttribute("viewBox","0 0 640 146");
+  svg.innerHTML=s;
 })();
 </script>
 <script>

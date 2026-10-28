@@ -1,6 +1,6 @@
 {
-  "name": "N411TA Weight & Balance",
-  "short_name": "N411TA W&B",
+  "name": "N411TA",
+  "short_name": "N411TA",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
