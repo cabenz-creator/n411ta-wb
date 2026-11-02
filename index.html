@@ -181,13 +181,13 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
         <tbody>
           <tr>
             <td class="item">Licensed empty weight<span class="lim" id="ewLim">From your airplane's W&amp;B data sheet / FAA 337</span></td>
-            <td><input type="number" id="ew" inputmode="decimal" step="0.1" value="1551"></td>
+            <td><input type="number" id="ew" inputmode="decimal" step="0.1" value="1496.5"></td>
             <td class="num" id="ewArm">—</td>
-            <td><input type="number" id="em" inputmode="decimal" step="0.01" value="59.8" aria-label="Empty moment/1000"></td>
+            <td><input type="number" id="em" inputmode="decimal" step="0.001" value="55.673" aria-label="Empty moment/1000"></td>
           </tr>
           <tr>
-            <td class="item">Oil at 1.9 lb/qt<span class="lim">7 qt min, 10 qt max</span></td>
-            <td><div class="gal"><input type="number" id="qOil" inputmode="decimal" step="0.5" min="0" max="10" value="10" aria-label="Oil quarts"><span>qt</span></div><div class="gal"><span id="wOil">—</span></div></td>
+            <td class="item">Oil at 1.9 lb/qt<span class="lim">8 qt sump (Lycoming O-360)</span></td>
+            <td><div class="gal"><input type="number" id="qOil" inputmode="decimal" step="0.5" min="0" max="8" value="8" aria-label="Oil quarts"><span>qt</span></div><div class="gal"><span id="wOil">—</span></div></td>
             <td><input type="number" class="arm" id="aOil" step="0.1" value="-21" aria-label="Oil arm"></td>
             <td class="num" id="mOil">—</td>
           </tr>
@@ -248,10 +248,10 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
         </tbody>
       </table>
       </div>
-      <p class="note">Pick the configuration at the top; each keeps its own empty weight and moment. Opens on the handbook's sample problem (page 3-5): 2500 lb at 106.1, which falls inside the envelope. Replace the empty weight and moment with your airplane's licensed figures. Dashed fields are station arms; edit them if your W&amp;B data lists different stations.</p>
+      <p class="note">Pick the configuration at the top; each keeps its own empty weight and moment. Empty weights are from N411TA's K-Bay Air weight and balance changes: standard 1496.5 lb at 37.20 in (10/6/2021, Hartzell prop install), rear seat removed 1476 lb at 36.70 in (10/2/2023). Dashed fields are station arms; edit them if your W&amp;B data lists different stations.</p>
       <div class="row-btns">
         <button type="button" id="clearBtn">Clear payload</button>
-        <button type="button" id="sampleBtn">Load handbook sample</button>
+        <button type="button" id="sampleBtn">Reset to defaults</button>
       </div>
     </section>
 
@@ -321,8 +321,16 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
           <tr><td>Fuel, total</td><td>52 gal</td></tr>
           <tr><td>Oil, total</td><td>10 qt</td></tr>
           <tr class="grp"><td colspan="2">Powerplant · updated (installed)</td></tr>
-          <tr><td>Engine</td><td>Lycoming O-360-A1A</td></tr>
+          <tr><td>Engine</td><td>Lycoming O-360-A1A, carbureted</td></tr>
+          <tr><td>Rated power</td><td>180 hp at 2700 RPM</td></tr>
           <tr><td>Propeller</td><td>80 in, modified</td></tr>
+          <tr><td>Minimum fuel grade</td><td>100/100LL</td></tr>
+          <tr><td>Oil sump</td><td>8 qt (2 qt minimum safe)</td></tr>
+          <tr><td>Oil pressure</td><td>55–95 psi normal, 25 psi idle min, 115 psi max start/warm-up</td></tr>
+          <tr><td>Oil temperature</td><td>245°F max; 140°F min continuous</td></tr>
+          <tr><td>Cylinder head temp</td><td>500°F max; 400°F or below for long life; under 435°F in high-power cruise</td></tr>
+          <tr><td>Fuel pressure</td><td>0.5–8.0 psi, 3.0 desired</td></tr>
+          <tr><td>Mixture</td><td>Full rich for takeoff and climb</td></tr>
           <tr class="grp"><td colspan="2">Powerplant · original</td></tr>
           <tr><td>Engine</td><td>Continental IO-360-D, fuel injected</td></tr>
           <tr><td>Rated power</td><td>210 hp at 2800 RPM</td></tr>
@@ -333,12 +341,12 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
         <h2>Servicing requirements</h2>
         <div class="tbl-wrap"><table class="kv"><tbody>
           <tr class="grp"><td colspan="2">Fuel</td></tr>
-          <tr><td>Grade</td><td>115/145 (MIL-G-5572)</td></tr>
+          <tr><td>Grade, original IO-360-D</td><td>115/145 (MIL-G-5572)</td></tr>
           <tr><td>Alternate</td><td>100/130 minimum</td></tr>
           <tr><td>Capacity each tank</td><td>26 gal</td></tr>
           <tr><td>Usable, all flight conditions</td><td>23 gal each</td></tr>
           <tr><td>Additional usable, level flight</td><td>2.5 gal each</td></tr>
-          <tr class="grp"><td colspan="2">Engine oil</td></tr>
+          <tr class="grp"><td colspan="2">Engine oil · original IO-360-D</td></tr>
           <tr><td>Military</td><td>MIL-L-22851 Type II above 30°F, Type III below 30°F</td></tr>
           <tr><td>Commercial</td><td>SAE 50 above 30°F; SAE 10W30 or SAE 30 below 30°F</td></tr>
           <tr><td>Type</td><td>Detergent or dispersant to Continental MHS-24 (must be used)</td></tr>
@@ -354,7 +362,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
         </tbody></table></div>
       </div>
     </div>
-    <footer>From the Performance-Specifications and Servicing Requirements pages inside the front cover of the R172E / T-41B Flight Handbook. Figures are for a new airplane in standard conditions.</footer>
+    <footer>From the Performance-Specifications and Servicing Requirements pages inside the front cover of the R172E / T-41B Flight Handbook. Figures are for a new airplane in standard conditions. Installed engine limits are from the Lycoming O-360 Operator's Manual 60297-12, section 3.</footer>
   </section>
 
   <section class="view" id="view-vspeeds" hidden>
@@ -431,16 +439,18 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
 <script>
 (function(){
   const $=id=>document.getElementById(id);
-  const OIL_LB=1.9, MAX_OIL=10, FUEL_LB=6, MAX_FUEL=52, MAX_BAG=200, MAX_N=2500, MAX_U=2200, AFT_N=47.3, AFT_U=40.5;
+  const OIL_LB=1.9, MAX_OIL=8, FUEL_LB=6, MAX_FUEL=52, MAX_BAG=200, MAX_N=2500, MAX_U=2200, AFT_N=47.3, AFT_U=40.5;
   const fwd=w=>w<=1950?35.0:35.0+(w-1950)*(5.5/550);
   const fields=["qOil","aOil","wPilot","aPilot","wCop","aCop","gFuel","aFuel","wRear1","aRear1","wRear2","aRear2","wLoad","aLoad","wBag","aBag","gBurn"];
-  const SAMPLE={ew:1551,em:59.8,qOil:10,aOil:-21,wPilot:200,aPilot:36,wCop:200,aCop:36,gFuel:46,aFuel:48,wRear1:100,aRear1:70,wRear2:100,aRear2:70,wLoad:0,aLoad:70,wBag:54,aBag:95,gBurn:20};
+  const SAMPLE={ew:1496.5,em:55.673,qOil:8,aOil:-21,wPilot:200,aPilot:36,wCop:200,aCop:36,gFuel:46,aFuel:48,wRear1:100,aRear1:70,wRear2:100,aRear2:70,wLoad:0,aLoad:70,wBag:54,aBag:95,gBurn:20};
   const KEY="r172e-wb-v1";
   let cfg="std";
-  const emp={std:{ew:"1551",em:"59.8"},norear:{ew:"",em:""}};
+  const N411={std:{ew:"1496.5",em:"55.673"},norear:{ew:"1476",em:"54.176"}};
+  const emp={std:{...N411.std},norear:{...N411.norear}};
   try{const s=JSON.parse(localStorage.getItem(KEY)||"null"); if(s){
     fields.forEach(f=>{ if(s[f]!==undefined&&s[f]!=="") $(f).value=s[f]; });
     if(s.emp){ if(s.emp.std) emp.std=s.emp.std; if(s.emp.norear) emp.norear=s.emp.norear; }
+    if(!s.ewV2){ if(emp.std.ew=="1551"&&emp.std.em=="59.8") emp.std={...N411.std}; if(emp.norear.ew===""||emp.norear.em==="") emp.norear={...N411.norear}; }
     else if(s.ew!==undefined){ emp.std={ew:s.ew,em:s.em}; }
     if(s.cfg==="norear") cfg="norear";
   }}catch(e){}
@@ -514,8 +524,8 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
     if(gal>MAX_FUEL) msgs.push(["bad","Fuel exceeds the 52 gal tank capacity."]);
     else if(gal>51) msgs.push(["info","52 gal includes 1 gal unusable fuel, which is normally already in the licensed empty weight. Enter 51 if yours includes it."]);
     else if(gal>46) msgs.push(["info","Fuel above 46 gal includes up to 5 gal that is usable in level flight only (handbook page 2-1)."]);
-    if(v("qOil")>MAX_OIL) msgs.push(["bad","Oil exceeds the 10 qt capacity."]);
-    else if(v("qOil")<7) msgs.push(["bad","Handbook: do not operate on less than 7 qt of oil."]);
+    if(v("qOil")>MAX_OIL) msgs.push(["bad","Oil exceeds the 8 qt sump capacity (Lycoming O-360)."]);
+    else if(v("qOil")<2) msgs.push(["bad","Below the 2 qt minimum safe oil quantity (Lycoming O-360)."]);
     if(wB>MAX_BAG) msgs.push(["bad","Baggage exceeds the 200 lb maximum."]);
     if(v("gBurn")>gal) msgs.push(["info","Fuel burned is more than fuel loaded; landing uses "+gal+" gal burned."]);
     if(utilEligible&&tN.ok&&!tU.ok) msgs.push(["info","Rear seat and baggage are empty, but this loading is outside the utility category (2200 lb, aft CG 40.5 in). No maneuvers."]);
@@ -524,7 +534,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
     $("msgs").innerHTML=msgs.map(([c,t])=>'<li class="'+c+'">'+t+'</li>').join("");
 
     draw(tW,tM,lW,lM,tN.ok,lN.ok);
-    try{const o={cfg,emp};fields.forEach(f=>o[f]=$(f).value);localStorage.setItem(KEY,JSON.stringify(o));}catch(e){}
+    try{const o={cfg,emp,ewV2:1};fields.forEach(f=>o[f]=$(f).value);localStorage.setItem(KEY,JSON.stringify(o));}catch(e){}
   }
 
   // chart
@@ -567,7 +577,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
   $("cfgStd").addEventListener("click",()=>setCfg("std"));
   $("cfgNoRear").addEventListener("click",()=>setCfg("norear"));
   $("clearBtn").addEventListener("click",()=>{["wPilot","wCop","gFuel","wRear1","wRear2","wLoad","wBag","gBurn"].forEach(f=>$(f).value=0);calc();});
-  $("sampleBtn").addEventListener("click",()=>{fields.forEach(f=>$(f).value=SAMPLE[f]);emp.std={ew:"1551",em:"59.8"};setCfg("std");});
+  $("sampleBtn").addEventListener("click",()=>{fields.forEach(f=>$(f).value=SAMPLE[f]);emp.std={...N411.std};emp.norear={...N411.norear};setCfg("std");});
   setCfg(cfg);
 })();
 (function(){
