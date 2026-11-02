@@ -159,6 +159,10 @@ select.unit{font-family:var(--mono);font-size:16px;padding:5px 4px;border:1px so
 button.primary{background:var(--od);color:var(--on-od);border-color:var(--od)}
 .wxstat{font-size:13.5px;margin:12px 0 6px}
 .wxstat.bad{color:var(--bad)}
+details.wxd{margin:8px 0 0}
+details.wxd>summary{cursor:pointer;font-family:var(--display);font-weight:600;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:4px 0;-webkit-tap-highlight-color:transparent}
+details.wxd>summary span{text-transform:none;letter-spacing:.02em;font-weight:500}
+details.wxd .wxraw{margin-top:4px}
 .wxraw{font-family:var(--mono);font-size:12.5px;white-space:pre-wrap;word-break:break-word;background:var(--bg);border:1px solid var(--rule);border-radius:4px;padding:8px 10px;margin:0 0 6px}
 .derived{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}
 .derived div{border:1px solid var(--rule);border-radius:4px;padding:6px 8px;font-size:12px;color:var(--muted)}
@@ -170,6 +174,41 @@ button.primary{background:var(--od);color:var(--on-od);border-color:var(--od)}
 #view-perf a{color:var(--accent);font-weight:600}
 .corr{margin:0;padding-left:18px;font-size:13px;color:var(--muted);display:grid;gap:4px}
 @media (max-width:480px){.fgrid input[type=text],.fgrid input[type=time],.fgrid select{width:150px}.fgrid input[type=date]{width:150px}.fgrid input[type=number]{width:92px}.fin input[type=number]{width:72px}.derived b{font-size:15px}header .tabs a{padding:8px 2px;font-size:13px;white-space:nowrap;letter-spacing:0}}
+.chg{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:3px;background:var(--bad-soft);color:var(--bad);font-family:var(--display);font-weight:600;font-size:11px;letter-spacing:.08em;vertical-align:1px}
+.orig{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+table.kv.mx td:first-child .lim{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+table.kv.mx td:last-child{white-space:nowrap}
+table.kv.mx td.wr{white-space:normal;max-width:46%}
+#view-maint>.panel{margin-bottom:22px}
+table.grid3.lube td:nth-child(2){white-space:nowrap;font-family:var(--mono);font-size:12px}
+table.tq th,table.tq td{padding:6px 5px}
+table.tq th{font-size:11px}
+.src{display:block;font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:2px}
+h2.sub{margin-top:20px}
+table.grid3 td,table.grid3 th{text-align:left;font-size:13.5px}
+table.grid3 td:first-child{white-space:nowrap}
+.sched{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:4px 22px}
+.sched h3{font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;margin:12px 0 4px;color:var(--accent)}
+.sched ul{margin:0;padding-left:18px}
+.sched li{font-size:14px;margin:4px 0}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:5px;overflow:hidden;margin:0 0 10px}
+.seg button{border:0;border-radius:0;background:transparent;padding:7px 12px;font:inherit;font-size:13.5px;color:var(--muted);cursor:pointer}
+.seg button.on{background:var(--ink);color:var(--paper)}
+table.tq td,table.tq th{font-family:var(--mono);font-size:12.5px;white-space:nowrap}
+table.tq th{font-family:var(--display)}
+.psearch{display:flex;flex-wrap:wrap;gap:8px}
+.psearch input{flex:1 1 220px;min-width:0;font-size:16px;padding:9px 10px}
+.psearch select{flex:0 1 220px;min-width:0;font-size:15px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.plist{list-style:none;margin:8px 0 0;padding:0}
+.plist li{border-bottom:1px solid var(--rule);padding:9px 2px}
+.plist .pn{font-family:var(--mono);font-weight:600;font-size:14.5px;background:none;border:0;padding:0;color:var(--ink);cursor:pointer;text-align:left}
+.plist .pn.copied::after{content:" copied";font-family:var(--display);font-size:11px;color:var(--ok);letter-spacing:.06em}
+.plist .pd{display:block;font-size:14px;margin-top:2px}
+.plist .pm{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.plist mark{background:var(--accent-soft);color:inherit;padding:0 1px}
+#pmore{margin-top:10px}
+@media (max-width:480px){header .tabs{display:grid;grid-template-columns:repeat(3,1fr)}}
 footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
 @media (prefers-reduced-motion:no-preference){circle.pt{transition:cx .25s,cy .25s}}
 @media (max-width:480px){.results{grid-template-columns:minmax(0,1fr)}
@@ -194,6 +233,8 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
       <a href="#specs">Specs</a>
       <a href="#vspeeds">V-Speeds</a>
       <a href="#perf">TO &amp; LDG</a>
+      <a href="#maint">Maint</a>
+      <a href="#parts">Parts</a>
     </nav>
   </header>
 
@@ -499,7 +540,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
         </div>
         <div class="row-btns"><button type="button" id="dNow">Now</button><button type="button" id="dGet" class="primary">Get weather</button></div>
         <p class="wxstat" id="dStat" role="status">Tap Get weather, or fill in the conditions by hand.</p>
-        <pre class="wxraw" id="dRaw" hidden></pre>
+        <details class="wxd" id="dRawBox" open hidden><summary>Weather report <span id="dRawTag"></span></summary><pre class="wxraw" id="dRaw"></pre></details>
         <div class="fgrid">
           <label for="dElev">Field elevation (ft)</label><input type="number" id="dElev" inputmode="decimal" step="1">
           <label for="dAlt">Altimeter (inHg)</label><input type="number" id="dAlt" inputmode="decimal" step="0.01">
@@ -526,7 +567,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
         </div>
         <div class="row-btns"><button type="button" id="aNow">Now</button><button type="button" id="aGet" class="primary">Get weather</button></div>
         <p class="wxstat" id="aStat" role="status">Tap Get weather, or fill in the conditions by hand.</p>
-        <pre class="wxraw" id="aRaw" hidden></pre>
+        <details class="wxd" id="aRawBox" open hidden><summary>Weather report <span id="aRawTag"></span></summary><pre class="wxraw" id="aRaw"></pre></details>
         <div class="fgrid">
           <label for="aElev">Field elevation (ft)</label><input type="number" id="aElev" inputmode="decimal" step="1">
           <label for="aAlt">Altimeter (inHg)</label><input type="number" id="aAlt" inputmode="decimal" step="0.01">
@@ -553,9 +594,191 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
     <p class="note">Weather comes from the National Weather Service API (api.weather.gov): past and current times use the airport's METAR; future times use the airport's TAF for wind (TEMPO and PROB winds count toward the crosswind check), the NWS hourly forecast for temperature (US TAFs don't include it), and the latest METAR altimeter. Airports without a TAF, or times past the end of the TAF, use the NWS hourly forecast wind and say so. The FAA's aviationweather.gov doesn't allow apps on other sites to read it, so use the links above to cross-check. Airports, field elevations and runways come from OurAirports (public domain) and work offline; verify against the Chart Supplement. Weather needs a connection.</p>
     <footer>Takeoff: Maximum Performance Take-Off Data, figure 5-3, page 5-3 (sod runway, flaps 20°, 1900–2500 lb, sea level to 7500 ft, 0–20 kt headwind; increase distance 10% for each 25°F above standard). Landing: Maximum Performance Landing Data, figure 5-5, page 5-9 (sod runway, no wind, flaps 40°, power off, 2500 lb only; reduce distance 10% for each 4 kt headwind). Crosswind: 15 kt demonstrated, page 2-15. Takeoff distances add the engine margin because the POH figures are for the original 210 hp IO-360-D; N411TA has the 180 hp O-360-A1A. Landing uses straight POH numbers. Results are planning figures for a new airplane flown by the POH technique.</footer>
   </section>
+
+  <section class="view" id="view-maint" hidden>
+    <div class="viewhead"><h2 class="vt">Maintenance</h2><div class="spec"><span>Service manual <b>D433R1</b></span><span><b>1 May 1974</b></span></div></div>
+    <p class="note conv">Airframe items are from the T-41B service manual. Engine oil, fuel and engine servicing are for the installed <b>Lycoming O-360-A1A</b> (Operator's Manual 60297-12). Anything that differs from the 1974 manual is marked <span class="chg">CHANGED</span> with the original IO-360-D value underneath. Quick reference only: your mechanic, the current Lycoming publications and the conversion paperwork govern.</p>
+    <div class="cols2">
+      <div class="panel">
+        <h2>Engine · O-360-A1A</h2>
+        <div class="tbl-wrap"><table class="kv mx"><tbody>
+          <tr><td>Fuel, minimum grade<span class="chg">CHANGED</span><span class="orig">Original: 100/130, alternate 115/145 (MIL-G-5572) · SM fig. 2-4</span></td><td>100/100LL<span class="src">Lyc 3-10</span></td></tr>
+          <tr><td>Oil sump capacity<span class="chg">CHANGED</span><span class="orig">Original: 8 qt; 9 qt with filter; 7 qt normal; 6 qt minimum for flight · SM 1-2, 2-4</span></td><td>8 qt<span class="src">Lyc 3-11</span></td></tr>
+          <tr><td>Minimum safe quantity in sump<span class="lim">An engine limit, not a dispatch level. Fill per the dipstick and the conversion paperwork.</span></td><td>2 qt<span class="src">Lyc 3-11</span></td></tr>
+          <tr><td>Oil and screen change, no full-flow filter<span class="lim">Change oil and clean the suction and pressure screens</span></td><td>25 hr<span class="src">Lyc 4-2</span></td></tr>
+          <tr><td>Oil and filter change, full-flow filter<span class="lim">Replace filter element, drain and renew oil</span></td><td>50 hr<span class="src">Lyc 4-3</span></td></tr>
+          <tr><td>Calendar limit<span class="lim">60297-12 gives hours only. The 1974 manual also says every 4 months; keeping that is conservative.</span></td><td>4 mo<span class="src">SM 2-4</span></td></tr>
+          <tr><td>Break-in oil<span class="chg">CHANGED</span><span class="orig">Original: MIL-L-6082 mineral oil for the first 25 hr · SM 2-4, 2-5</span></td><td class="wr">Straight mineral oil, 50 hr min or until oil consumption stabilizes<span class="src">Lyc 3-1</span></td></tr>
+          <tr><td>Break-in cruise power</td><td>65–75% until 50 hr<span class="src">Lyc 3-1</span></td></tr>
+          <tr><td>Magneto timing<span class="chg">CHANGED</span><span class="lim">O-360-A series. Consult the engine nameplate before timing.</span></td><td>25° BTC<span class="src">Lyc 2-1, 2-3</span></td></tr>
+          <tr><td>Spark plug torque<span class="chg">CHANGED</span><span class="orig">Original IO-360-D: 330 ±30 lb-in · SM 2-4. Not given in 60297-12; use Lycoming's current spark plug data.</span></td><td>See Lycoming</td></tr>
+          <tr><td>Ground run limit</td><td>2200 RPM max<span class="src">Lyc 3-4</span></td></tr>
+        </tbody></table></div>
+        <h2 class="sub">Oil grade by outside air temperature <span class="chg">CHANGED</span></h2>
+        <div class="tbl-wrap"><table class="grid3"><thead><tr><th>Ambient air</th><th>Mineral<br>MIL-L-6082</th><th>Ashless dispersant<br>MIL-L-22851</th></tr></thead><tbody>
+          <tr><td>All temperatures</td><td>—</td><td>15W-50 or 20W-50</td></tr>
+          <tr><td>Above 80°F</td><td>SAE 60</td><td>SAE 60</td></tr>
+          <tr><td>Above 60°F</td><td>SAE 50</td><td>SAE 40 or 50</td></tr>
+          <tr><td>30° to 90°F</td><td>SAE 40</td><td>SAE 40</td></tr>
+          <tr><td>0° to 70°F</td><td>SAE 30</td><td>SAE 40, 30 or 20W-40</td></tr>
+          <tr><td>Below 10°F</td><td>SAE 20</td><td>SAE 30 or 20W-30</td></tr>
+        </tbody></table></div>
+        <p class="note">Lycoming 60297-12 page 3-11; it refers to the latest Service Instruction 1014. Original IO-360-D chart (SM 2-5): MIL-L-22851 Type II (SAE 50) above 30°F, Type III (SAE 30 or 10W-30) below 30°F.</p>
+      </div>
+      <div class="panel">
+        <h2>Airframe servicing</h2>
+        <div class="tbl-wrap"><table class="kv mx"><tbody>
+          <tr class="grp"><td colspan="2">Tires and gear</td></tr>
+          <tr><td>Main tires · 6.00×6, 4-ply</td><td>24 psi<span class="src">SM 1-2</span></td></tr>
+          <tr><td>Nose tire · 6.00×6, 4-ply</td><td>26 psi<span class="src">SM 1-2</span></td></tr>
+          <tr><td>Nose strut, strut extended<span class="lim">Fill with fluid to the filler hole, nose wheel off the ground, then inflate</span></td><td>45 psi<span class="src">SM 1-2, 2-6</span></td></tr>
+          <tr><td>Wheel alignment, camber</td><td>3° to 5°<span class="src">SM 1-2</span></td></tr>
+          <tr><td>Wheel alignment, toe-in</td><td>0 to .06 in<span class="src">SM 1-2</span></td></tr>
+          <tr class="grp"><td colspan="2">Fluids</td></tr>
+          <tr><td>Hydraulic fluid · brakes, nose strut, shimmy dampener</td><td>MIL-H-5606<span class="src">SM 2-9</span></td></tr>
+          <tr><td>Brake master cylinders<span class="lim">Check and refill; bleed if pedals are spongy</span></td><td>100 hr<span class="src">SM 2-6</span></td></tr>
+          <tr><td>Shimmy dampener<span class="lim">Fill completely, free of air</span></td><td>300 hr<span class="src">SM 2-6</span></td></tr>
+          <tr><td>Battery electrolyte<span class="lim">Distilled water to the baffle plate; more often in hot weather</span></td><td>50 hr or 30 days<span class="src">SM 2-6</span></td></tr>
+          <tr class="grp"><td colspan="2">Filters</td></tr>
+          <tr><td>Induction air filter<span class="lim">Clean every 50 hr (daily if very dusty). Replace at 500 hr or 1 yr, or after 30 air cleanings / 20 washes. Written for the original installation; confirm against the conversion's air box.</span></td><td>50 hr<span class="src">SM 2-5</span></td></tr>
+          <tr><td>Vacuum central air filter<span class="lim">Inspect 100 hr. Replace at 500 hr or when suction drops below 4.6 inHg</span></td><td>500 hr<span class="src">SM 2-6, 2-11</span></td></tr>
+          <tr><td>Suction relief valve screen</td><td>100 hr<span class="src">SM 2-10</span></td></tr>
+          <tr><td>Vacuum oil separator<span class="lim">Flush with solvent, dry with air</span></td><td>100 hr<span class="src">SM 2-11</span></td></tr>
+        </tbody></table></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Servicing schedule <span class="subt">SM figure 2-4, engine items per Lycoming</span></h2>
+      <div class="sched">
+        <div><h3>Daily</h3><ul>
+          <li>Fill fuel tanks after each flight to limit condensation</li>
+          <li>Pitot and static ports: check for obstructions before first flight</li>
+          <li>Fuel strainer: drain water and sediment before first flight</li>
+          <li>Oil filler cap: check tight after servicing</li>
+          <li>Oil dipstick: check on preflight, add as needed</li></ul></div>
+        <div><h3>25 hr</h3><ul>
+          <li>No full-flow filter: change oil, clean suction and pressure screens <span class="chg">CHANGED</span><span class="orig">Same interval in the 1974 manual; now per Lycoming 4-2</span></li></ul></div>
+        <div><h3>50 hr</h3><ul>
+          <li>Full-flow filter: replace element, drain and renew oil <span class="chg">CHANGED</span><span class="orig">Same interval in the 1974 manual; now per Lycoming 4-3</span></li>
+          <li>Battery: check electrolyte (or every 30 days)</li>
+          <li>Induction air filter: service (more often if dusty)</li></ul></div>
+        <div><h3>100 hr</h3><ul>
+          <li>Suction relief valve screen: clean</li>
+          <li>Fuel tank sump drains: drain water and sediment, re-safety plugs</li>
+          <li>Fuel selector valve drain: drain, re-safety plug</li>
+          <li>Fuel selector valve and drive shaft: inspect (SM 2-39)</li>
+          <li>Wing flap actuator jackscrew: check (SM 2-38)</li>
+          <li>Brake master cylinders: check fluid</li>
+          <li>Fuel reservoir tank drain: drain, re-safety plug</li>
+          <li>Fuel strainer: disassemble, clean bowl and screen</li>
+          <li>Vacuum oil separator: flush and dry</li>
+          <li>Engine: drain and renew oil; test, clean and regap spark plugs <span class="chg">CHANGED</span><span class="orig">Lycoming 4-4</span></li></ul></div>
+        <div><h3>300 hr</h3><ul><li>Shimmy dampener: check fluid, refill (SM 2-22)</li></ul></div>
+        <div><h3>400 hr</h3><ul><li>Valve inspection: remove rocker covers, check rockers move freely with valves closed <span class="chg">CHANGED</span><span class="orig">Lycoming 4-5; not in the 1974 manual</span></li></ul></div>
+        <div><h3>500 hr</h3><ul><li>Vacuum central air filter: replace (or when suction is below 4.6 inHg)</li></ul></div>
+        <div><h3>As required</h3><ul>
+          <li>Tires: keep at chart pressures; pressure drops in cold weather</li>
+          <li>Ground power: 24 V DC, negative ground. Turn the master ON before connecting</li>
+          <li>Nose strut: keep filled and at 45 psi</li></ul></div>
+      </div>
+      <p class="note">The fuel system drains and reservoir tank are from the original fuel-injected installation. If the carbureted conversion changed the fuel system, follow its paperwork.</p>
+    </div>
+
+    <div class="cols2">
+      <div class="panel">
+        <h2>Control travel <span class="subt">SM figure 1-1</span></h2>
+        <div class="tbl-wrap"><table class="kv"><tbody>
+          <tr class="grp"><td colspan="2">Aileron</td></tr>
+          <tr><td>Up</td><td>20° ±1°</td></tr><tr><td>Down</td><td>15° ±1°</td></tr>
+          <tr class="grp"><td colspan="2">Wing flap</td></tr>
+          <tr><td>Travel</td><td>0° to 40° ±2°</td></tr>
+          <tr class="grp"><td colspan="2">Rudder</td></tr>
+          <tr><td>Right / left, parallel to waterline</td><td>16°10′ ±1°</td></tr>
+          <tr><td>Right / left, perpendicular to hinge line</td><td>17°44′ ±1°</td></tr>
+          <tr class="grp"><td colspan="2">Elevator</td></tr>
+          <tr><td>Up</td><td>28° +1° −0°</td></tr><tr><td>Down</td><td>23° +1° −0°</td></tr>
+          <tr class="grp"><td colspan="2">Elevator trim tab</td></tr>
+          <tr><td>Up</td><td>28° +1° −0°</td></tr><tr><td>Down</td><td>13° +1° −0°</td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="panel">
+        <h2>Lubricants <span class="subt">SM figure 2-5</span></h2>
+        <div class="tbl-wrap"><table class="grid3 lube"><thead><tr><th>Sym</th><th>Spec</th><th>Lubricant</th></tr></thead><tbody>
+          <tr><td>PG</td><td>SS-G-659A</td><td>Powdered graphite</td></tr>
+          <tr><td>GA</td><td>MIL-G-81322A</td><td>Wheel bearing grease, wide temp range</td></tr>
+          <tr><td>GH</td><td>MIL-G-23827A</td><td>Aircraft and instrument grease</td></tr>
+          <tr><td>GL</td><td>MIL-G-21164</td><td>High and low temp grease (moly)</td></tr>
+          <tr><td>OG</td><td>MIL-L-7870</td><td>General purpose oil, low temp</td></tr>
+          <tr><td>PO</td><td>MIL-G-3545</td><td>Aircraft grease, high temp</td></tr>
+          <tr><td>PL</td><td>VV-P-236</td><td>Petrolatum</td></tr>
+          <tr><td>PR</td><td>—</td><td>No. 10 weight non-detergent oil</td></tr>
+        </tbody></table></div>
+        <p class="note">Lube points and intervals are drawn on figure 2-5, sheets 1–6 (service manual pages 2-12 through 2-14).</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Nut torque <span class="subt">SM figure 1-3 · lb-in, oil-free cadmium-plated threads</span></h2>
+      <div class="seg" role="tablist" aria-label="Thread series"><button type="button" class="on" data-tq="fine">Fine thread</button><button type="button" data-tq="coarse">Coarse thread</button></div>
+      <div class="tbl-wrap"><table class="tq" id="tqFine"><thead><tr><th>Tap size</th><th>Tension std</th><th>Tension alt</th><th>Shear std</th><th>Shear alt</th></tr></thead><tbody>
+        <tr><td>8-36</td><td>12-15</td><td>—</td><td>7-9</td><td>—</td></tr>
+        <tr><td>10-32</td><td>20-25</td><td>20-28</td><td>12-15</td><td>12-19</td></tr>
+        <tr><td>1/4-28</td><td>50-70</td><td>50-75</td><td>30-40</td><td>30-48</td></tr>
+        <tr><td>5/16-24</td><td>100-140</td><td>100-150</td><td>60-85</td><td>60-106</td></tr>
+        <tr><td>3/8-24</td><td>160-190</td><td>160-260</td><td>95-110</td><td>95-170</td></tr>
+        <tr><td>7/16-20</td><td>450-500</td><td>450-560</td><td>270-300</td><td>270-390</td></tr>
+        <tr><td>1/2-20</td><td>480-690</td><td>480-730</td><td>290-410</td><td>290-500</td></tr>
+        <tr><td>9/16-18</td><td>800-1000</td><td>800-1070</td><td>480-600</td><td>480-750</td></tr>
+        <tr><td>5/8-18</td><td>1100-1300</td><td>1100-1600</td><td>660-780</td><td>660-1060</td></tr>
+        <tr><td>3/4-16</td><td>2300-2500</td><td>2300-3350</td><td>1300-1500</td><td>1300-2200</td></tr>
+        <tr><td>7/8-14</td><td>2500-3000</td><td>2500-4650</td><td>1500-1800</td><td>1500-2900</td></tr>
+        <tr><td>1-14</td><td>3700-5500</td><td>3700-6650</td><td>2200-3300</td><td>2200-4400</td></tr>
+        <tr><td>1-1/8-12</td><td>5000-7000</td><td>5000-10000</td><td>3000-4200</td><td>3000-6300</td></tr>
+        <tr><td>1-1/4-12</td><td>9000-11000</td><td>9000-16700</td><td>5400-6600</td><td>5400-10000</td></tr>
+      </tbody></table>
+      <table class="tq" id="tqCoarse" hidden><thead><tr><th>Tap size</th><th>Tension</th><th>Shear</th></tr></thead><tbody>
+        <tr><td>8-32</td><td>12-15</td><td>7-9</td></tr>
+        <tr><td>10-24</td><td>20-25</td><td>12-15</td></tr>
+        <tr><td>1/4-20</td><td>40-50</td><td>25-30</td></tr>
+        <tr><td>5/16-18</td><td>80-90</td><td>48-55</td></tr>
+        <tr><td>3/8-16</td><td>160-185</td><td>95-100</td></tr>
+        <tr><td>7/16-14</td><td>235-255</td><td>140-155</td></tr>
+        <tr><td>1/2-13</td><td>400-480</td><td>240-290</td></tr>
+        <tr><td>9/16-12</td><td>500-700</td><td>300-420</td></tr>
+        <tr><td>5/8-11</td><td>700-900</td><td>420-540</td></tr>
+        <tr><td>3/4-10</td><td>1150-1600</td><td>700-950</td></tr>
+        <tr><td>7/8-9</td><td>2200-3000</td><td>1300-1800</td></tr>
+        <tr><td>1-8</td><td>3700-5000</td><td>2200-3000</td></tr>
+        <tr><td>1-1/8-8</td><td>5500-6500</td><td>3300-4000</td></tr>
+        <tr><td>1-1/4-8</td><td>6500-8000</td><td>4000-5000</td></tr>
+      </tbody></table></div>
+      <p class="note" id="tqNoteFine">Tension std: AN310, AN315, AN345, AN362, AN363, AN366, MS20365, NAS679, MS21042/44/45 and other self-locking nuts. Shear std: AN316, AN320, AN7502, MS20364. Alt values: AN310 or AN320 castellated nuts when the cotter pin won't line up at normal torque (or replace the nut).</p>
+      <p class="note" id="tqNoteCoarse" hidden>Tension: AN310, AN340, AN366, MS20365 and other self-locking anchor nuts. Shear: AN316, AN320, MS20364.</p>
+      <p class="note">For installation only, not for checking the tightness of installed parts. Engine fasteners follow Lycoming's torque tables.</p>
+    </div>
+    <footer>SM = T-41B Service Manual D433R1, 1 May 1974. Lyc = Lycoming O-360 Operator's Manual 60297-12, page numbers in that manual.</footer>
+  </section>
+  <section class="view" id="view-parts" hidden>
+    <div class="viewhead"><h2 class="vt">Parts</h2><div class="spec"><span>Parts catalog <b>P341R3</b></span><span><b>1 May 1974</b></span></div></div>
+    <div class="panel">
+      <div class="psearch">
+        <label for="pq" class="vh">Search parts</label>
+        <input type="search" id="pq" placeholder="Part number or name, e.g. oil filler, 0523901, MS20365" autocomplete="off" autocapitalize="characters" spellcheck="false" enterkeyhint="search">
+        <label for="pfig" class="vh">Figure</label>
+        <select id="pfig"><option value="">All figures</option></select>
+      </div>
+      <p class="wxstat" id="pcount" role="status">Loading the parts list…</p>
+      <ul class="plist" id="plist"></ul>
+      <button type="button" id="pmore" hidden>Show more</button>
+    </div>
+    <p class="note conv">Read by OCR from the 1974 Army catalog scan, so a character can be wrong. Check the part number on the catalog page shown, and check for supersedures with Textron Aviation or your parts supplier before ordering. Engine and propeller parts in this catalog are for the original IO-360-D and constant-speed prop, not the installed O-360-A1A.</p>
+    <footer>Tap a part number to copy it. "Catalog p." is the page number printed on the catalog page; "PDF" is the page in the scanned file.</footer>
+  </section>
 </div>
 
 <script src="airports.js" id="apdb" async></script>
+<script src="parts.js" id="pdb" async></script>
 <script>
 (function(){
   const $=id=>document.getElementById(id);
@@ -701,7 +924,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
   setCfg(cfg);
 })();
 (function(){
-  const views=["wb","specs","vspeeds","perf"];
+  const views=["wb","specs","vspeeds","perf","maint","parts"];
   function route(){
     const h=(location.hash||"").slice(1), cur=views.includes(h)?h:"wb";
     views.forEach(x=>{document.getElementById("view-"+x).hidden=x!==cur;
@@ -960,15 +1183,23 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
         const latest=async sid=>{ try{ const lt=await j("https://api.weather.gov/stations/"+sid+"/observations/latest"); const q=lt.properties, mt=parseMetar(q.rawMessage); if(mt.alt) return {alt:mt.alt,raw:q.rawMessage}; const bp=q.barometricPressure&&q.barometricPressure.value; if(bp&&Date.now()-new Date(q.timestamp)<2*3600e3) return {alt:bp*0.00029530,raw:sid+" automated observation "+new Date(q.timestamp).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})+", altimeter "+(bp*0.00029530).toFixed(2)}; }catch(e){} return null; };
         let L=st?await latest(id):null;
         if(!L){ for(const s of await nearby()){ L=await latest(s.id); if(L){altFrom=s;break;} } }
-        if(L){ $(k+"Alt").value=L.alt.toFixed(2); altTxt="Altimeter from latest METAR: "+L.raw; }
-        src="Forecast for "+ts(when)+": wind from "+windSrc+"; temperature from "+(per?"the NWS hourly forecast for "+id:"(none available, check it)");
+        // Forecast altimeter: latest observed altimeter + the pressure change the weather model (GFS/HRRR via Open-Meteo) predicts between now and the chosen time.
+        let trend=null;
+        if(pos){ try{ const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+pos[0].toFixed(3)+"&longitude="+pos[1].toFixed(3)+"&hourly=pressure_msl&timeformat=unixtime&forecast_days=8&timezone=GMT");
+            if(r.ok){ const m=await r.json(), T=(m.hourly&&m.hourly.time)||[], P=(m.hourly&&m.hourly.pressure_msl)||[];
+              const at=ms=>{ let bi=-1,bd=Infinity; T.forEach((t,i)=>{ const d=Math.abs(t*1000-ms); if(P[i]!=null&&d<bd){bd=d;bi=i;} }); return bd<=90*60e3?P[bi]:null; };
+              const p0=at(Date.now()), p1=at(when.getTime()); if(p0!=null&&p1!=null) trend={d:(p1-p0)*0.0295300, p1}; } }catch(e){} }
+        if(L){ const a=trend?L.alt+trend.d:L.alt; $(k+"Alt").value=a.toFixed(2);
+          altTxt=trend?("Forecast altimeter "+a.toFixed(2)+": latest METAR "+L.alt.toFixed(2)+(trend.d>=0?" + ":" − ")+Math.abs(trend.d).toFixed(2)+" model trend to "+ts(when)+" (GFS/HRRR via Open-Meteo)\nLatest: "+L.raw):("Altimeter from latest METAR (no model trend available, so this is the current value): "+L.raw); }
+        else if(trend){ const a=trend.p1*0.0295300; $(k+"Alt").value=a.toFixed(2); altTxt="Forecast altimeter "+a.toFixed(2)+" from the weather model's sea-level pressure (no nearby METAR to anchor it)"; }
+        src="Forecast for "+ts(when)+": wind from "+windSrc+"; temperature from "+(per?"the NWS hourly forecast for "+id:"(none available, check it)")+"; altimeter "+(trend?"is the latest METAR plus the model's pressure trend":"is the current METAR value");
         if(tafFrom||altFrom) wxNote=" "+id+" has no "+[tafFrom?"TAF":"",altFrom?"METAR":""].filter(Boolean).join(" or ")+", so "+[tafFrom?"wind is from "+lbl(tafFrom):"",altFrom?"altimeter is from "+lbl(altFrom):""].filter(Boolean).join(" and ")+".";
         line=[tafRaw||(taf&&taf.prev?(taf.sid+" TAF wind "+(taf.prev.dir==null?"VRB":String(taf.prev.dir).padStart(3,"0"))+String(taf.prev.spd||0).padStart(2,"0")+(taf.prev.gust?"G"+taf.prev.gust:"")+"KT"):""), per?("NWS hourly for "+id+": "+per.temperature+"°"+per.temperatureUnit+", wind "+per.windDirection+" "+per.windSpeed):"", altTxt].filter(Boolean).join("\n");
       }
       let rwyNote="";
       if(!$(k+"RwySel").value){const b=pickBest(k); if(b){$(k+"RwySel").value=b.id; applyRwy(k); rwyNote=" Runway "+b.id+" picked for the wind; change it if you're using another.";}}
       status(k,id+(apt?" · "+apt.name:(p.name?" · "+p.name:""))+": "+src+"."+wxNote+" Wind converted to magnetic with "+varE()+"° variation."+rwyNote);
-      $(k+"Raw").hidden=false; $(k+"Raw").textContent=line;
+      $(k+"RawBox").hidden=false; $(k+"Raw").textContent=line; $(k+"RawTag").textContent=(line.match(/\b(METAR|TAF)\b/)||[])[0]?"· "+(dt>45*60e3?"TAF / forecast":"METAR"):"";
       calc();
     }catch(e){
       status(k,(e instanceof TypeError?"Couldn't reach the weather service. Check your signal; if you just updated the app, close and reopen it.":"Couldn't get weather ("+e.message+"). Enter conditions by hand."),true);
@@ -995,12 +1226,63 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
   const wbv=$("view-wb"); if(wbv){wbv.addEventListener("input",()=>setTimeout(calc,0)); wbv.addEventListener("click",()=>setTimeout(calc,0));}
   addEventListener("hashchange",()=>{if(location.hash==="#perf") calc();});
   try{const fo=JSON.parse(localStorage.getItem("n411ta-fold")||"{}"); SIDES.forEach(k=>{ if(fo[k]===false) $(k+"Fold").open=false; });}catch(e){}
+  try{const ro=JSON.parse(localStorage.getItem("n411ta-rawfold")||"{}"); SIDES.forEach(k=>{ if(ro[k]===false) $(k+"RawBox").open=false; });}catch(e){}
+  SIDES.forEach(k=>$(k+"RawBox").addEventListener("toggle",()=>{ try{const ro=JSON.parse(localStorage.getItem("n411ta-rawfold")||"{}"); ro[k]=$(k+"RawBox").open; localStorage.setItem("n411ta-rawfold",JSON.stringify(ro));}catch(e){} }));
   SIDES.forEach(k=>$(k+"Fold").addEventListener("toggle",()=>{ try{const fo=JSON.parse(localStorage.getItem("n411ta-fold")||"{}"); fo[k]=$(k+"Fold").open; localStorage.setItem("n411ta-fold",JSON.stringify(fo));}catch(e){} }));
   calc();
 })();
 </script>
 <script>
-if('serviceWorker' in navigator && location.protocol==='https:'){navigator.serviceWorker.register('sw.js').catch(function(){});}
+if('serviceWorker' in navigator && location.protocol==='https:'){var had=!!navigator.serviceWorker.controller,rl=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(had&&!rl){rl=true;location.reload();}});navigator.serviceWorker.register('sw.js').then(function(r){r.update();document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')r.update().catch(function(){});});}).catch(function(){});}
+</script>
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  if(!$("view-maint")) return;
+  document.querySelectorAll(".seg button[data-tq]").forEach(b=>b.addEventListener("click",()=>{
+    const f=b.dataset.tq==="fine";
+    document.querySelectorAll(".seg button[data-tq]").forEach(x=>x.classList.toggle("on",x===b));
+    $("tqFine").hidden=!f; $("tqCoarse").hidden=f; $("tqNoteFine").hidden=!f; $("tqNoteCoarse").hidden=f;
+  }));
+  let D=null, shown=60, last=[];
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const norm=s=>s.toUpperCase().replace(/[^A-Z0-9]/g,"");
+  function ready(){ D=window.N411PARTS; if(!D) return false;
+    const sel=$("pfig"); Object.keys(D.figs).map(Number).sort((a,b)=>a-b).forEach(n=>{const o=document.createElement("option"); o.value=n; o.textContent="Fig. "+n+" · "+D.figs[n][0]; sel.appendChild(o);});
+    try{ const s=JSON.parse(localStorage.getItem("n411ta-parts")||"{}"); if(s.q) $("pq").value=s.q; if(s.f) sel.value=s.f; }catch(e){}
+    run(); return true; }
+  function hl(text,words){ let h=esc(text); words.forEach(w=>{ if(w.length<2) return; const re=new RegExp("("+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","ig"); h=h.replace(re,"<mark>$1</mark>"); }); return h; }
+  function run(){
+    if(!D) return;
+    const q=$("pq").value.trim(), f=$("pfig").value;
+    try{ localStorage.setItem("n411ta-parts",JSON.stringify({q,f})); }catch(e){}
+    const words=q.toUpperCase().split(/\s+/).filter(Boolean), nq=norm(q);
+    let r=D.e;
+    if(f) r=r.filter(x=>String(x[2])===f);
+    if(words.length){
+      r=r.map(x=>{ const pn=norm(x[0]), d=x[1].toUpperCase(); let s=0;
+        if(nq.length>=3&&pn===nq) s=100; else if(nq.length>=3&&pn.startsWith(nq)) s=60; else if(nq.length>=4&&pn.includes(nq)) s=40;
+        if(!s){ if(words.every(w=>d.includes(w)||norm(x[0]).includes(norm(w)))) s=20+(d.startsWith(words[0])?5:0); }
+        return [s,x]; }).filter(a=>a[0]>0).sort((a,b)=>b[0]-a[0]||(a[1][2]||0)-(b[1][2]||0)).map(a=>a[1]);
+    } else if(!f){ r=[]; }
+    last=r; shown=60; draw(words);
+  }
+  function draw(words){
+    words=words||$("pq").value.trim().toUpperCase().split(/\s+/).filter(Boolean);
+    const q=$("pq").value.trim(), f=$("pfig").value;
+    $("pcount").textContent=!q&&!f?("Search "+D.e.length.toLocaleString()+" catalog lines by part number or name, or pick a figure."):(last.length?last.length.toLocaleString()+" match"+(last.length===1?"":"es")+(last.length>shown?", showing "+shown:""):"No matches. Try fewer words or part of the number.");
+    $("plist").innerHTML=last.slice(0,shown).map(x=>{ const [pn,d,fig,idx,pdf,pg]=x, ft=fig&&D.figs[fig]?D.figs[fig][0]:"";
+      return '<li><button type="button" class="pn" data-pn="'+esc(pn)+'">'+hl(pn,words)+'</button><span class="pd">'+hl(d,words)+'</span><span class="pm">'+(fig?"Fig. "+fig+(idx?"-"+esc(idx):"")+(ft?" · "+esc(ft):""):"")+(pg?" · Catalog p. "+pg:"")+" · PDF "+pdf+'</span></li>'; }).join("");
+    $("pmore").hidden=last.length<=shown;
+  }
+  $("pmore").addEventListener("click",()=>{shown+=100; draw();});
+  let t=null; $("pq").addEventListener("input",()=>{clearTimeout(t); t=setTimeout(run,150);});
+  $("pfig").addEventListener("change",run);
+  $("plist").addEventListener("click",e=>{ const b=e.target.closest(".pn"); if(!b) return;
+    const v=b.dataset.pn; const done=()=>{b.classList.add("copied"); setTimeout(()=>b.classList.remove("copied"),1500);};
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(v).then(done,()=>{}); });
+  if(!ready()){ const s=$("pdb"); if(s) s.addEventListener("load",ready); s&&s.addEventListener("error",()=>{$("pcount").textContent="The parts list didn't load. Close and reopen the app.";}); }
+})();
 </script>
 </body>
 </html>
