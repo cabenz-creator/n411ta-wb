@@ -216,6 +216,19 @@ table.tq th{font-family:var(--display)}
 .plist .pd{display:block;font-size:14px;margin-top:2px}
 .plist .pm{display:block;font-size:12px;color:var(--muted);margin-top:2px}
 .plist mark{background:var(--accent-soft);color:inherit;padding:0 1px}
+.pfigbox{margin:10px 0 2px}
+.figthumb{display:block;width:100%;padding:0;border:1px solid var(--rule);border-radius:6px;background:#fff;cursor:zoom-in;overflow:hidden;margin-bottom:8px}
+.figthumb img{display:block;width:100%;height:auto}
+.figcap{font-size:12.5px;color:var(--muted);margin:2px 0 0}
+.pzoom{position:fixed;inset:0;z-index:100;background:#1b1d1a;display:flex;flex-direction:column}
+.pzoom[hidden]{display:none}
+.pzbar{display:flex;align-items:center;gap:6px;padding:calc(env(safe-area-inset-top) + 8px) 10px 8px;background:#26292a;color:#f2f0ea}
+.pzbar .pzt{flex:1;min-width:0;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pzbar button{min-width:44px;height:40px;border:1px solid #555;border-radius:6px;background:#33373a;color:#f2f0ea;font-size:18px;font-family:inherit;cursor:pointer}
+.pzbar button.pzw{font-size:13px;padding:0 8px}
+.pzbar button[hidden]{display:none}
+.pzscroll{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;overscroll-behavior:contain}
+.pzscroll img{display:block;background:#fff;max-width:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 #pmore{margin-top:10px}
 @media (max-width:480px){header .tabs{display:grid;grid-template-columns:repeat(3,1fr)}}
 .subtabs{display:flex;gap:4px;margin:-10px 0 20px;border-bottom:1px solid var(--rule)}
@@ -791,6 +804,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
         <label for="pfig" class="vh">Figure</label>
         <select id="pfig"><option value="">All figures</option></select>
       </div>
+      <div class="pfigbox" id="pfigbox" hidden></div>
       <p class="wxstat" id="pcount" role="status">Loading the parts list…</p>
       <ul class="plist" id="plist"></ul>
       <button type="button" id="pmore" hidden>Show more</button>
@@ -798,6 +812,18 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
     <p class="note conv">Read by OCR from the 1974 Army catalog scan, so a character can be wrong. Check the part number on the catalog page shown, and check for supersedures with Textron Aviation or your parts supplier before ordering. Engine and propeller parts in this catalog are for the original IO-360-D and constant-speed prop, not the installed O-360-A1A.</p>
     <footer>Tap a part number to copy it. "Catalog p." is the page number printed on the catalog page; "PDF" is the page in the scanned file.</footer>
   </section>
+  <div class="pzoom" id="pzoom" hidden role="dialog" aria-modal="true" aria-labelledby="pzt">
+    <div class="pzbar">
+      <span class="pzt" id="pzt"></span>
+      <button type="button" class="pzw" id="pzprev" aria-label="Previous sheet" hidden>‹</button>
+      <button type="button" class="pzw" id="pznext" aria-label="Next sheet" hidden>›</button>
+      <button type="button" id="pzout" aria-label="Zoom out">−</button>
+      <button type="button" id="pzin" aria-label="Zoom in">+</button>
+      <button type="button" class="pzw" id="pzfit">Fit</button>
+      <button type="button" id="pzclose" aria-label="Close">✕</button>
+    </div>
+    <div class="pzscroll" id="pzscroll"><img id="pzimg" alt="" draggable="false"></div>
+  </div>
 </div>
 
 <script src="airports.js" id="apdb" async></script>
@@ -1334,6 +1360,53 @@ if('serviceWorker' in navigator && location.protocol==='https:'){var had=!!navig
   $("plist").addEventListener("click",e=>{ const b=e.target.closest(".pn"); if(!b) return;
     const v=b.dataset.pn; const done=()=>{b.classList.add("copied"); setTimeout(()=>b.classList.remove("copied"),1500);};
     if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(v).then(done,()=>{}); });
+  // Figure picture + full-screen zoom
+  const fb=$("pfigbox"), zm=$("pzoom"), zs=$("pzscroll"), zi=$("pzimg");
+  let zp=[], zk=0, zf="", zsc=1, zfit=1, zlast=null;
+  const figsrc=p=>"fig/p"+String(p).padStart(3,"0")+".png";
+  function figShow(){ const f=$("pfig").value; if(!f||!D){ fb.hidden=true; fb.innerHTML=""; return; }
+    const pg=(D.fp&&D.fp[f])||[], t=D.figs[f]?D.figs[f][0]:""; fb.hidden=false;
+    if(!pg.length){ fb.innerHTML='<p class="figcap">Figure '+esc(f)+' has no drawing in the catalog, only the parts list below.</p>'; return; }
+    fb.innerHTML=pg.map((p,i)=>'<button type="button" class="figthumb" data-i="'+i+'" aria-label="Zoom figure '+esc(f)+(pg.length>1?', sheet '+(i+1):'')+'"><img src="'+figsrc(p)+'" alt="Figure '+esc(f)+', '+esc(t)+(pg.length>1?', sheet '+(i+1)+' of '+pg.length:'')+'" loading="lazy"></button>').join("")+
+      '<p class="figcap">Tap the drawing to zoom. Its index numbers match the "Fig. '+esc(f)+'-n" numbers below.</p>'; }
+  function zset(s,cx,cy){ const n=zi.naturalWidth; if(!n) return;
+    s=Math.max(zfit,Math.min(6,s)); if(cx==null){ cx=zs.clientWidth/2; cy=zs.clientHeight/2; }
+    const fx=(zs.scrollLeft+cx)/zi.offsetWidth, fy=(zs.scrollTop+cy)/zi.offsetHeight;
+    zsc=s; zi.style.width=Math.round(n*s)+"px";
+    zs.scrollLeft=fx*zi.offsetWidth-cx; zs.scrollTop=fy*zi.offsetHeight-cy; }
+  function zfitNow(){ const n=zi.naturalWidth; if(!n) return; zfit=Math.min(1,zs.clientWidth/n); zsc=zfit; zi.style.width=Math.round(n*zfit)+"px"; zs.scrollTop=0; zs.scrollLeft=0; }
+  function zload(k){ zk=k; const t=D.figs[zf]?D.figs[zf][0]:"";
+    $("pzt").textContent="Fig. "+zf+(t?" · "+t:"")+(zp.length>1?" ("+(k+1)+"/"+zp.length+")":"");
+    $("pzprev").hidden=$("pznext").hidden=zp.length<2; $("pzprev").disabled=k===0; $("pznext").disabled=k===zp.length-1;
+    zi.alt=$("pzt").textContent; zi.style.width="";
+    zi.onload=zfitNow; zi.src=figsrc(zp[k]); if(zi.complete&&zi.naturalWidth) zfitNow(); }
+  function zopen(i){ zf=$("pfig").value; zp=(D.fp&&D.fp[zf])||[]; if(!zp.length) return;
+    zlast=document.activeElement; zm.hidden=false; document.documentElement.style.overflow="hidden"; zload(i); $("pzclose").focus(); }
+  function zclose(){ zm.hidden=true; document.documentElement.style.overflow=""; if(zlast&&zlast.focus) zlast.focus(); }
+  fb.addEventListener("click",e=>{ const b=e.target.closest(".figthumb"); if(b) zopen(+b.dataset.i); });
+  $("pzclose").addEventListener("click",zclose);
+  $("pzin").addEventListener("click",()=>zset(zsc*1.5));
+  $("pzout").addEventListener("click",()=>zset(zsc/1.5));
+  $("pzfit").addEventListener("click",zfitNow);
+  $("pzprev").addEventListener("click",()=>{ if(zk>0) zload(zk-1); });
+  $("pznext").addEventListener("click",()=>{ if(zk<zp.length-1) zload(zk+1); });
+  document.addEventListener("keydown",e=>{ if(zm.hidden) return;
+    if(e.key==="Escape") zclose(); else if(e.key==="+"||e.key==="=") zset(zsc*1.5); else if(e.key==="-") zset(zsc/1.5); });
+  window.addEventListener("resize",()=>{ if(!zm.hidden&&zsc<=zfit+1e-6) zfitNow(); });
+  const rel=(x,y)=>{ const r=zs.getBoundingClientRect(); return [x-r.left,y-r.top]; };
+  zs.addEventListener("dblclick",e=>{ const [x,y]=rel(e.clientX,e.clientY); zset(zsc>zfit*1.6?zfit:zfit*3,x,y); });
+  zs.addEventListener("wheel",e=>{ if(!e.ctrlKey) return; e.preventDefault(); const [x,y]=rel(e.clientX,e.clientY); zset(zsc*Math.exp(-e.deltaY/200),x,y); },{passive:false});
+  let pin=null, tap=0;
+  const tdist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+  zs.addEventListener("touchstart",e=>{ if(e.touches.length===2){ e.preventDefault(); pin={d:tdist(e.touches),s:zsc}; } },{passive:false});
+  zs.addEventListener("touchmove",e=>{ if(pin&&e.touches.length===2){ e.preventDefault();
+    const [x,y]=rel((e.touches[0].clientX+e.touches[1].clientX)/2,(e.touches[0].clientY+e.touches[1].clientY)/2); zset(pin.s*tdist(e.touches)/pin.d,x,y); } },{passive:false});
+  zs.addEventListener("touchend",e=>{ if(pin){ if(e.touches.length<2) pin=null; tap=0; return; }
+    if(e.changedTouches.length!==1||e.touches.length) return; const now=Date.now(), c=e.changedTouches[0];
+    if(now-tap<300){ e.preventDefault(); const [x,y]=rel(c.clientX,c.clientY); zset(zsc>zfit*1.6?zfit:zfit*3,x,y); tap=0; } else tap=now; });
+  zm.addEventListener("gesturestart",e=>e.preventDefault());
+  $("pfig").addEventListener("change",figShow);
+  { const r0=ready; ready=function(){ const ok=r0(); if(ok) figShow(); return ok; }; }
   if(!ready()){ const s=$("pdb"); if(s) s.addEventListener("load",ready); s&&s.addEventListener("error",()=>{$("pcount").textContent="The parts list didn't load. Close and reopen the app.";}); }
 })();
 </script>
