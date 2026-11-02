@@ -187,6 +187,10 @@ table.tq th{font-size:11px}
 h2.sub{margin-top:20px}
 table.grid3 td,table.grid3 th{text-align:left;font-size:13.5px}
 table.grid3 td:first-child{white-space:nowrap}
+table.grid3.oil td:first-child{white-space:normal}
+table.grid3.oil .c{color:var(--muted);font-size:12px;white-space:nowrap}
+.oilnotes{margin:12px 0 0;padding-left:18px}
+.oilnotes li{font-size:13.5px;margin:6px 0}
 .sched{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:4px 22px}
 .sched h3{font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;margin:12px 0 4px;color:var(--accent)}
 .sched ul{margin:0;padding-left:18px}
@@ -209,6 +213,12 @@ table.tq th{font-family:var(--display)}
 .plist mark{background:var(--accent-soft);color:inherit;padding:0 1px}
 #pmore{margin-top:10px}
 @media (max-width:480px){header .tabs{display:grid;grid-template-columns:repeat(3,1fr)}}
+.subtabs{display:flex;gap:4px;margin:-10px 0 20px;border-bottom:1px solid var(--rule)}
+.subtabs a{font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.03em;padding:10px 14px 9px;color:var(--muted);text-decoration:none;border-bottom:3px solid transparent;margin-bottom:-1px}
+.subtabs a:hover{color:var(--ink)}
+.subtabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+.subtabs a:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:3px}
+@media (max-width:480px){.subtabs a{flex:1;text-align:center;padding:10px 6px 9px}}
 footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
 @media (prefers-reduced-motion:no-preference){circle.pt{transition:cx .25s,cy .25s}}
 @media (max-width:480px){.results{grid-template-columns:minmax(0,1fr)}
@@ -228,15 +238,15 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
       <div class="eyebrow">U.S. Army T-41B · Cessna R172E</div>
       <h1>N411TA</h1>
     </div>
-    <nav class="tabs" aria-label="Pages">
-      <a href="#wb" aria-current="page">W&amp;B</a>
-      <a href="#specs">Specs</a>
-      <a href="#vspeeds">V-Speeds</a>
-      <a href="#perf">TO &amp; LDG</a>
-      <a href="#maint">Maint</a>
-      <a href="#parts">Parts</a>
+    <nav class="tabs" aria-label="Sections">
+      <a href="#specs" data-g="ov">Overview</a>
+      <a href="#wb" data-g="pf" aria-current="page">Performance</a>
+      <a href="#maint" data-g="mx">Maint</a>
     </nav>
   </header>
+  <nav class="subtabs" data-g="ov" aria-label="Overview pages" hidden><a href="#specs">Specs</a><a href="#vspeeds">V-Speeds</a></nav>
+  <nav class="subtabs" data-g="pf" aria-label="Performance pages"><a href="#wb" aria-current="page">W&amp;B</a><a href="#perf">TO &amp; LDG</a></nav>
+  <nav class="subtabs" data-g="mx" aria-label="Maintenance pages" hidden><a href="#maint">Specs</a><a href="#parts">Parts</a></nav>
 
   <section class="view" id="view-wb">
   <div class="viewhead">
@@ -596,7 +606,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
   </section>
 
   <section class="view" id="view-maint" hidden>
-    <div class="viewhead"><h2 class="vt">Maintenance</h2><div class="spec"><span>Service manual <b>D433R1</b></span><span><b>1 May 1974</b></span></div></div>
+    <div class="viewhead"><h2 class="vt">Maintenance Specs</h2><div class="spec"><span>Service manual <b>D433R1</b></span><span><b>1 May 1974</b></span></div></div>
     <p class="note conv">Airframe items are from the T-41B service manual. Engine oil, fuel and engine servicing are for the installed <b>Lycoming O-360-A1A</b> (Operator's Manual 60297-12). Anything that differs from the 1974 manual is marked <span class="chg">CHANGED</span> with the original IO-360-D value underneath. Quick reference only: your mechanic, the current Lycoming publications and the conversion paperwork govern.</p>
     <div class="cols2">
       <div class="panel">
@@ -608,22 +618,30 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
           <tr><td>Oil and screen change, no full-flow filter<span class="lim">Change oil and clean the suction and pressure screens</span></td><td>25 hr<span class="src">Lyc 4-2</span></td></tr>
           <tr><td>Oil and filter change, full-flow filter<span class="lim">Replace filter element, drain and renew oil</span></td><td>50 hr<span class="src">Lyc 4-3</span></td></tr>
           <tr><td>Calendar limit<span class="lim">60297-12 gives hours only. The 1974 manual also says every 4 months; keeping that is conservative.</span></td><td>4 mo<span class="src">SM 2-4</span></td></tr>
-          <tr><td>Break-in oil<span class="chg">CHANGED</span><span class="orig">Original: MIL-L-6082 mineral oil for the first 25 hr · SM 2-4, 2-5</span></td><td class="wr">Straight mineral oil, 50 hr min or until oil consumption stabilizes<span class="src">Lyc 3-1</span></td></tr>
+          <tr><td>Break-in oil<span class="chg">CHANGED</span><span class="orig">Original: MIL-L-6082 mineral oil for the first 25 hr · SM 2-4, 2-5</span></td><td class="wr">Non-dispersant mineral oil, first 50 hr or until oil consumption stabilizes<span class="src">SI 1014N · Lyc 3-1</span></td></tr>
           <tr><td>Break-in cruise power</td><td>65–75% until 50 hr<span class="src">Lyc 3-1</span></td></tr>
           <tr><td>Magneto timing<span class="chg">CHANGED</span><span class="lim">O-360-A series. Consult the engine nameplate before timing.</span></td><td>25° BTC<span class="src">Lyc 2-1, 2-3</span></td></tr>
           <tr><td>Spark plug torque<span class="chg">CHANGED</span><span class="orig">Original IO-360-D: 330 ±30 lb-in · SM 2-4. Not given in 60297-12; use Lycoming's current spark plug data.</span></td><td>See Lycoming</td></tr>
           <tr><td>Ground run limit</td><td>2200 RPM max<span class="src">Lyc 3-4</span></td></tr>
         </tbody></table></div>
-        <h2 class="sub">Oil grade by outside air temperature <span class="chg">CHANGED</span></h2>
-        <div class="tbl-wrap"><table class="grid3"><thead><tr><th>Ambient air</th><th>Mineral<br>MIL-L-6082</th><th>Ashless dispersant<br>MIL-L-22851</th></tr></thead><tbody>
-          <tr><td>All temperatures</td><td>—</td><td>15W-50 or 20W-50</td></tr>
-          <tr><td>Above 80°F</td><td>SAE 60</td><td>SAE 60</td></tr>
-          <tr><td>Above 60°F</td><td>SAE 50</td><td>SAE 40 or 50</td></tr>
-          <tr><td>30° to 90°F</td><td>SAE 40</td><td>SAE 40</td></tr>
-          <tr><td>0° to 70°F</td><td>SAE 30</td><td>SAE 40, 30 or 20W-40</td></tr>
-          <tr><td>Below 10°F</td><td>SAE 20</td><td>SAE 30 or 20W-30</td></tr>
+        <h2 class="sub">Oil grade by temperature at startup <span class="chg">CHANGED</span></h2>
+        <div class="tbl-wrap"><table class="grid3 oil"><thead><tr><th>Average ambient air at startup</th><th>Non-dispersant mineral<br>SAE J1966</th><th>Ashless dispersant<br>SAE J1899</th></tr></thead><tbody>
+          <tr><td>All temperatures</td><td>SAE 20W-50</td><td>SAE 15W-50, 20W-50 or 25W-60</td></tr>
+          <tr><td>Above 80°F <span class="c">(26°C)</span></td><td>SAE 60</td><td>SAE 60</td></tr>
+          <tr><td>Above 60°F <span class="c">(15°C)</span></td><td>SAE 50</td><td>SAE 40 or 50</td></tr>
+          <tr><td>30° to 90°F <span class="c">(0° to 32°C)</span></td><td>SAE 40</td><td>SAE 40</td></tr>
+          <tr><td>0° to 70°F <span class="c">(−18° to 20°C)</span></td><td>SAE 30</td><td>SAE 30 or 40</td></tr>
+          <tr><td>0° to 90°F <span class="c">(−18° to 32°C)</span></td><td>SAE 20W-50</td><td>SAE 20W-50 or 15W-50</td></tr>
+          <tr><td>Below 10°F <span class="c">(−12°C)</span></td><td>SAE 20W-50</td><td>SAE 30</td></tr>
         </tbody></table></div>
-        <p class="note">Lycoming 60297-12 page 3-11; it refers to the latest Service Instruction 1014. Original IO-360-D chart (SM 2-5): MIL-L-22851 Type II (SAE 50) above 30°F, Type III (SAE 30 or 10W-30) below 30°F.</p>
+        <ul class="oilnotes">
+          <li><b>Which oil:</b> straight (non-dispersant) mineral oil for the first 50 hours of a new or overhauled engine, or until oil consumption stabilizes, and again after a cylinder change until consumption stabilizes. Ashless dispersant oil after that.</li>
+          <li><b>Switching after long use on mineral oil:</b> after the first oil change to ashless dispersant, change again within 5 hours. If sludge shows up, keep changing every 10 hours until filters and screens come out clean, then go back to normal intervals.</li>
+          <li><b>Cold starts:</b> below 10°F (−12°C), preheat the engine and oil (Lycoming SI 1505).</li>
+          <li><b>Additive:</b> the LW-16702 additive requirement in this SI is for O-320-H and O/LO-360-E engines. It doesn't list the O-360-A1A.</li>
+          <li><b>Brands:</b> any brand that meets these SAE specs is acceptable. They replace the former MIL-L-6082 (mineral) and MIL-L-22851 (ashless dispersant).</li>
+        </ul>
+        <p class="note">Lycoming Service Instruction 1014N, Lubricating Oil Recommendations, 29 July 2020 (Table 1 and Part II). The temperatures are a guide. Original IO-360-D chart (SM 2-5): MIL-L-22851 Type II (SAE 50) above 30°F, Type III (SAE 30 or 10W-30) below 30°F.</p>
       </div>
       <div class="panel">
         <h2>Airframe servicing</h2>
@@ -925,10 +943,18 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
 })();
 (function(){
   const views=["wb","specs","vspeeds","perf","maint","parts"];
+  const groups={ov:["specs","vspeeds"],pf:["wb","perf"],mx:["maint","parts"]};
+  let lastSub={}; try{ lastSub=JSON.parse(localStorage.getItem("n411ta-subtab")||"{}")||{}; }catch(e){}
   function route(){
     const h=(location.hash||"").slice(1), cur=views.includes(h)?h:"wb";
-    views.forEach(x=>{document.getElementById("view-"+x).hidden=x!==cur;
-      const a=document.querySelector('.tabs a[href="#'+x+'"]'); if(a){ if(x===cur) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); }});
+    views.forEach(x=>{document.getElementById("view-"+x).hidden=x!==cur;});
+    const g=Object.keys(groups).find(k=>groups[k].includes(cur));
+    lastSub[g]=cur; try{ localStorage.setItem("n411ta-subtab",JSON.stringify(lastSub)); }catch(e){}
+    document.querySelectorAll("header .tabs a[data-g]").forEach(a=>{ const k=a.dataset.g;
+      a.setAttribute("href","#"+(groups[k].includes(lastSub[k])?lastSub[k]:groups[k][0]));
+      if(k===g) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
+    document.querySelectorAll(".subtabs").forEach(n=>{ n.hidden=n.dataset.g!==g;
+      n.querySelectorAll("a").forEach(a=>{ if(a.getAttribute("href")==="#"+cur) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); }); });
   }
   addEventListener("hashchange",()=>{route();scrollTo(0,0);}); route();
   const svg=document.getElementById("tape"); if(!svg) return;
