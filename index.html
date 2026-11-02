@@ -127,6 +127,8 @@ table.grid-t td:first-child,table.grid-t th:first-child{text-align:left;font-fam
 .tape-panel{margin-bottom:22px}
 .tape-wrap{overflow-x:auto}
 #tape{min-width:0}
+#tape .tu{cursor:pointer}
+#tape .tu:focus-visible rect{stroke:var(--accent);stroke-width:2}
 #tape text{font-family:var(--mono);font-size:17px;fill:var(--muted)}
 #tape .lbl{font-family:var(--display);font-size:19px;font-weight:600;fill:var(--ink)}
 @media (max-width:480px){.tabs{width:100%}.tabs a{flex:1;text-align:center;padding:8px 6px;font-size:14px}table.vs td.big{font-size:16px}}
@@ -958,17 +960,29 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
   }
   addEventListener("hashchange",()=>{route();scrollTo(0,0);}); route();
   const svg=document.getElementById("tape"); if(!svg) return;
-  const lo=40,hi=190,L=20,Rr=620,x=m=>L+(m-lo)/(hi-lo)*(Rr-L);
-  let s="";
-  const band=(a,b,y,h,col)=>'<rect x="'+x(a)+'" y="'+y+'" width="'+(x(b)-x(a))+'" height="'+h+'" fill="'+col+'" rx="2"/>';
-  s+=band(56,100,58,10,"var(--ink)")+band(56,100,59,8,"var(--paper)");
-  s+=band(64,145,46,12,"var(--ok)")+band(145,182,46,12,"#d9a21b");
-  s+='<rect x="'+(x(182)-2)+'" y="40" width="4" height="30" fill="var(--bad)"/>';
-  for(let m=40;m<=190;m+=10){s+='<line x1="'+x(m)+'" x2="'+x(m)+'" y1="72" y2="'+(m%20?77:81)+'" stroke="var(--muted)"/>'; if(m%20===0) s+='<text x="'+x(m)+'" y="100" text-anchor="middle">'+m+'</text>';}
-  [[56,"56",0],[64,"64",0],[100,"100",0],[145,"145",0],[182,"182",0]].forEach(([m,t])=>{s+='<text class="lbl" x="'+x(m)+'" y="36" text-anchor="middle">'+t+'</text>';});
-  [[75,"Vx"],[95,"Vy"],[85,"Vg"],[127,"Va"]].forEach(([m,t])=>{s+='<path d="M'+x(m)+' 108 l-6 10 h12 z" fill="var(--accent)"/><text x="'+x(m)+'" y="138" text-anchor="middle" style="fill:var(--accent);font-weight:600">'+t+'</text>';});
-  svg.setAttribute("viewBox","0 0 640 146");
-  svg.innerHTML=s;
+  let unit="mph"; try{ if(localStorage.getItem("n411ta-tape-unit")==="kt") unit="kt"; }catch(e){}
+  function draw(){
+    const k=unit==="kt"?0.868976:1, cv=m=>Math.round(m*k);
+    const lo=unit==="kt"?30:40, hi=unit==="kt"?170:190, step=unit==="kt"?20:20, L=132, Rr=626, x=v=>L+(v-lo)/(hi-lo)*(Rr-L), xm=m=>x(m*k);
+    let s="";
+    const band=(a,b,y,h,col)=>'<rect x="'+xm(a)+'" y="'+y+'" width="'+(xm(b)-xm(a))+'" height="'+h+'" fill="'+col+'" rx="2"/>';
+    s+=band(56,100,58,10,"var(--ink)")+band(56,100,59,8,"var(--paper)");
+    s+=band(64,145,46,12,"var(--ok)")+band(145,182,46,12,"#d9a21b");
+    s+='<rect x="'+(xm(182)-2)+'" y="40" width="4" height="30" fill="var(--bad)"/>';
+    for(let v=lo;v<=hi;v+=10){s+='<line x1="'+x(v)+'" x2="'+x(v)+'" y1="72" y2="'+(v%step?77:81)+'" stroke="var(--muted)"/>'; if(v%step===0) s+='<text x="'+x(v)+'" y="100" text-anchor="middle">'+v+'</text>';}
+    [56,64,100,145,182].forEach(m=>{const an=m===56?"end":m===64?"start":"middle", dx=m===56?-3:m===64?3:0; s+='<text class="lbl" x="'+(xm(m)+dx)+'" y="36" text-anchor="'+an+'">'+cv(m)+'</text>';});
+    [[75,"Vx"],[95,"Vy"],[85,"Vg"],[127,"Va"]].forEach(([m,t])=>{s+='<path d="M'+xm(m)+' 108 l-6 10 h12 z" fill="var(--accent)"/><text x="'+xm(m)+'" y="138" text-anchor="middle" style="fill:var(--accent);font-weight:600">'+t+'</text>';});
+    // unit switch at the left end of the bar
+    const on=(u,x0)=>'<g class="tu" data-u="'+u+'" role="button" tabindex="0" aria-pressed="'+(unit===u)+'" aria-label="Show '+(u==="kt"?"knots":"miles per hour")+'"><rect x="'+x0+'" y="34" width="56" height="42" rx="5" fill="'+(unit===u?"var(--ink)":"transparent")+'"/><text x="'+(x0+28)+'" y="62" text-anchor="middle" style="font-family:var(--display);font-weight:700;font-size:21px;fill:'+(unit===u?"var(--paper)":"var(--muted)")+'">'+u.toUpperCase()+'</text></g>';
+    s+='<rect x="2" y="32" width="118" height="46" rx="7" fill="none" stroke="var(--rule)"/>'+on("mph",4)+on("kt",62);
+    svg.setAttribute("viewBox","0 0 640 146");
+    svg.setAttribute("aria-label","Airspeed indicator arcs in "+(unit==="kt"?"knots":"mph")+": white "+cv(56)+" to "+cv(100)+", green "+cv(64)+" to "+cv(145)+", yellow "+cv(145)+" to "+cv(182)+", red line "+cv(182));
+    svg.innerHTML=s;
+  }
+  const pick=u=>{ if(u&&u!==unit){ unit=u; try{localStorage.setItem("n411ta-tape-unit",u);}catch(e){} draw(); } };
+  svg.addEventListener("click",e=>{ const g=e.target.closest(".tu"); if(g) pick(g.dataset.u); });
+  svg.addEventListener("keydown",e=>{ const g=e.target.closest(".tu"); if(g&&(e.key==="Enter"||e.key===" ")){ e.preventDefault(); pick(g.dataset.u); } });
+  draw();
 })();
 (function(){
   const $=id=>document.getElementById(id);
