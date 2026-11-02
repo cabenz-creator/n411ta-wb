@@ -957,7 +957,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
           windSrc="no TAF covers this time at "+id+" or nearby, so wind is from the NWS hourly forecast (not an aviation forecast)";
         }
         let altTxt="", altFrom=null;
-        const latest=async sid=>{ try{ const lt=await j("https://api.weather.gov/stations/"+sid+"/observations/latest"); const mt=parseMetar(lt.properties.rawMessage); if(mt.alt) return {alt:mt.alt,raw:lt.properties.rawMessage}; }catch(e){} return null; };
+        const latest=async sid=>{ try{ const lt=await j("https://api.weather.gov/stations/"+sid+"/observations/latest"); const q=lt.properties, mt=parseMetar(q.rawMessage); if(mt.alt) return {alt:mt.alt,raw:q.rawMessage}; const bp=q.barometricPressure&&q.barometricPressure.value; if(bp&&Date.now()-new Date(q.timestamp)<2*3600e3) return {alt:bp*0.00029530,raw:sid+" automated observation "+new Date(q.timestamp).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})+", altimeter "+(bp*0.00029530).toFixed(2)}; }catch(e){} return null; };
         let L=st?await latest(id):null;
         if(!L){ for(const s of await nearby()){ L=await latest(s.id); if(L){altFrom=s;break;} } }
         if(L){ $(k+"Alt").value=L.alt.toFixed(2); altTxt="Altimeter from latest METAR: "+L.raw; }

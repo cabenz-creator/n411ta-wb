@@ -1,5 +1,5 @@
 // Caches the app so it opens with no connection. Install always downloads fresh copies (cache: 'reload') so an update never reuses a stale page. Weather requests are never cached; the stencil font is.
-const CACHE = 'r172e-wb-v15';
+const CACHE = 'r172e-wb-v16';
 const FILES = ['./', './index.html', './manifest.webmanifest', './apple-touch-icon.png', './icon-192.png', './airports.js'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES.map(u => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
