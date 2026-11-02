@@ -1,7 +1,6 @@
-// Caches the worksheet so it opens with no connection.
-const CACHE = 'r172e-wb-v10';
-const FILES = ['./', './index.html', './manifest.webmanifest',
-  './apple-touch-icon.png', './icon-192.png'];
+// Caches the app so it opens with no connection. Weather requests are never cached; the stencil font is.
+const CACHE = 'r172e-wb-v11';
+const FILES = ['./', './index.html', './manifest.webmanifest', './apple-touch-icon.png', './icon-192.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
 });
@@ -11,6 +10,9 @@ self.addEventListener('activate', e => {
 });
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
+  const url = new URL(e.request.url);
+  const fonts = url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com';
+  if (url.origin !== self.location.origin && !fonts) return; // weather goes straight to the network
   e.respondWith(caches.match(e.request, { ignoreSearch: true }).then(hit => hit ||
     fetch(e.request).then(res => {
       const copy = res.clone();
