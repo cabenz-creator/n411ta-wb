@@ -120,6 +120,9 @@ table.kv td{font-size:14px}
 table.kv td:last-child{font-family:var(--mono);font-size:13px;text-align:right}
 table.kv tr.grp td{font-family:var(--display);font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:12px;color:var(--accent);padding-top:14px;text-align:left}
 table.vs td.big{font-family:var(--mono);font-size:19px;font-weight:600;white-space:nowrap}
+#view-vspeeds.u-kt table.vs th:nth-child(2),#view-vspeeds.u-kt table.vs td:nth-child(2),#view-vspeeds.u-mph table.vs th:nth-child(3),#view-vspeeds.u-mph table.vs td:nth-child(3){display:none}
+#view-vspeeds.u-kt table.vs td:nth-child(3){font-family:var(--mono);font-size:19px;font-weight:600;white-space:nowrap;color:var(--ink)}
+@media (max-width:480px){#view-vspeeds.u-kt table.vs td:nth-child(3){font-size:16px}}
 table.vs .sym{font-family:var(--mono);font-weight:600;color:var(--accent);margin-right:2px}
 table.vs .sym sub{font-size:.7em}
 table.grid-t td,table.grid-t th{text-align:center;font-family:var(--mono)}
@@ -459,7 +462,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
   </section>
 
   <section class="view" id="view-vspeeds" hidden>
-    <div class="viewhead"><h2 class="vt">V-Speeds</h2><div class="spec"><span>Airspeed indicator <b>MPH</b></span><span>At <b>2500 lb</b></span></div></div>
+    <div class="viewhead"><h2 class="vt">V-Speeds</h2><div class="spec"><span>Airspeed indicator <b>MPH</b></span><span>Showing <b id="vsShow">KT</b></span><span>At <b>2500 lb</b></span></div></div>
     <div class="panel tape-panel">
       <h2>Airspeed indicator markings</h2>
       <div class="tape-wrap"><svg id="tape" viewBox="0 0 640 120" role="img" aria-label="Airspeed indicator arcs: white 56 to 100, green 64 to 145, yellow 145 to 182, red line 182 mph"></svg></div>
@@ -469,11 +472,11 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
         <h2>Limits · calibrated airspeed</h2>
         <div class="tbl-wrap"><table class="vs"><thead><tr><th>Speed</th><th>MPH</th><th>KT</th></tr></thead><tbody>
           <tr><td class="item"><span class="sym">V<sub>NE</sub></span> Never exceed<span class="lim">Red line. Glide or dive, smooth air</span></td><td class="big">182</td><td class="num">158</td></tr>
-          <tr><td class="item"><span class="sym">V<sub>NO</sub></span> Max structural cruising<span class="lim">Top of green arc. 145–182 caution range</span></td><td class="big">145</td><td class="num">126</td></tr>
+          <tr><td class="item"><span class="sym">V<sub>NO</sub></span> Max structural cruising<span class="lim">Top of green arc. <span class="um" data-m="145–182">145–182</span> caution range</span></td><td class="big">145</td><td class="num">126</td></tr>
           <tr><td class="item"><span class="sym">V<sub>A</sub></span> Maneuvering<span class="lim">Abrupt full control travel at 2500 lb</span></td><td class="big">127</td><td class="num">110</td></tr>
           <tr><td class="item"><span class="sym">V<sub>FE</sub></span> Max flap extended<span class="lim">Top of white arc</span></td><td class="big">100</td><td class="num">87</td></tr>
           <tr><td class="item"><span class="sym">V<sub>S1</sub></span> Stall, flaps up<span class="lim">Bottom of green arc</span></td><td class="big">64</td><td class="num">56</td></tr>
-          <tr><td class="item"><span class="sym">V<sub>SO</sub></span> Stall, landing flaps<span class="lim">Bottom of white arc. 53 mph at 40° in stall table</span></td><td class="big">56</td><td class="num">49</td></tr>
+          <tr><td class="item"><span class="sym">V<sub>SO</sub></span> Stall, landing flaps<span class="lim">Bottom of white arc. <span class="um" data-m="53" data-u="1">53 mph</span> at 40° in stall table</span></td><td class="big">56</td><td class="num">49</td></tr>
         </tbody></table></div>
       </div>
       <div class="panel">
@@ -508,16 +511,16 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
     </div>
     <div class="cols2">
       <div class="panel">
-        <h2>Power-off stall speeds · mph CAS · 2500 lb</h2>
+        <h2>Power-off stall speeds · <span class="uu">kt</span> CAS · 2500 lb</h2>
         <div class="tbl-wrap"><table class="grid-t"><thead><tr><th>Bank</th><th>0°</th><th>20°</th><th>40°</th><th>60°</th></tr></thead><tbody>
           <tr><td>Flaps up</td><td>64</td><td>66</td><td>73</td><td>90</td></tr>
           <tr><td>Flaps 20°</td><td>58</td><td>60</td><td>67</td><td>83</td></tr>
           <tr><td>Flaps 40°</td><td>53</td><td>55</td><td>60</td><td>75</td></tr>
         </tbody></table></div>
-        <p class="note">Stall horn sounds 5 to 10 mph above the stall in all configurations.</p>
+        <p class="note">Stall horn sounds <span class="ur" data-a="5" data-b="10">5 to 10 mph</span> above the stall in all configurations.</p>
       </div>
       <div class="panel">
-        <h2>Airspeed correction · IAS to CAS, mph</h2>
+        <h2>Airspeed correction · IAS to CAS, <span class="uu">kt</span></h2>
         <div class="tbl-wrap"><table class="grid-t"><thead><tr><th>IAS</th><th>50</th><th>60</th><th>70</th><th>80</th><th>90</th><th>100</th><th>120</th><th>150</th></tr></thead><tbody>
           <tr><td>Flaps up</td><td>60</td><td>64</td><td>69</td><td>77</td><td>86</td><td>96</td><td>116</td><td>147</td></tr>
           <tr><td>Flaps down</td><td>59</td><td>63</td><td>71</td><td>80</td><td>88</td><td>98</td><td>—</td><td>—</td></tr>
@@ -960,7 +963,16 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
   }
   addEventListener("hashchange",()=>{route();scrollTo(0,0);}); route();
   const svg=document.getElementById("tape"); if(!svg) return;
-  let unit="mph"; try{ if(localStorage.getItem("n411ta-tape-unit")==="kt") unit="kt"; }catch(e){}
+  let unit="kt"; try{ if(localStorage.getItem("n411ta-tape-unit")==="mph") unit="mph"; }catch(e){}
+  function applyUnit(){
+    const vv=document.getElementById("view-vspeeds"), kt=unit==="kt"; if(!vv) return;
+    vv.classList.toggle("u-kt",kt); vv.classList.toggle("u-mph",!kt);
+    vv.querySelectorAll("table.grid-t td, table.grid-t th").forEach(c=>{ if(c.dataset.mph===undefined){ const t=c.textContent.trim(); if(!/^\d+$/.test(t)) return; c.dataset.mph=t; } c.textContent=kt?Math.round(c.dataset.mph*0.868976):c.dataset.mph; });
+    vv.querySelectorAll(".uu").forEach(e=>e.textContent=kt?"kt":"mph");
+    vv.querySelectorAll(".ur").forEach(e=>{ const a=+e.dataset.a,b=+e.dataset.b; e.textContent=kt?Math.round(a*0.868976)+" to "+Math.round(b*0.868976)+" kt":a+" to "+b+" mph"; });
+    vv.querySelectorAll(".um").forEach(e=>{ const m=e.dataset.m, t=kt?m.replace(/\d+/g,n=>Math.round(n*0.868976)):m; e.textContent=t+(e.dataset.u?(kt?" kt":" mph"):""); });
+    const sh=document.getElementById("vsShow"); if(sh) sh.textContent=kt?"KT":"MPH";
+  }
   function draw(){
     const k=unit==="kt"?0.868976:1, cv=m=>Math.round(m*k);
     const lo=unit==="kt"?30:40, hi=unit==="kt"?170:190, step=unit==="kt"?20:20, L=132, Rr=626, x=v=>L+(v-lo)/(hi-lo)*(Rr-L), xm=m=>x(m*k);
@@ -978,6 +990,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
     svg.setAttribute("viewBox","0 0 640 146");
     svg.setAttribute("aria-label","Airspeed indicator arcs in "+(unit==="kt"?"knots":"mph")+": white "+cv(56)+" to "+cv(100)+", green "+cv(64)+" to "+cv(145)+", yellow "+cv(145)+" to "+cv(182)+", red line "+cv(182));
     svg.innerHTML=s;
+    applyUnit();
   }
   const pick=u=>{ if(u&&u!==unit){ unit=u; try{localStorage.setItem("n411ta-tape-unit",u);}catch(e){} draw(); } };
   svg.addEventListener("click",e=>{ const g=e.target.closest(".tu"); if(g) pick(g.dataset.u); });
