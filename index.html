@@ -883,7 +883,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
   async function lookup(k){
     let id=$(k+"Apt").value.trim().toUpperCase();
     const apt=findApt(id); if(apt) id=apt.code; else if(/^[A-Z0-9]{3}$/.test(id)) id="K"+id;
-    if(!/^[A-Z0-9]{4}$/.test(id)){status(k,"Enter a 3 or 4 character airport code, like BFI or KBFI.",true);return;}
+    if(!apt&&!/^[A-Z0-9]{4}$/.test(id)){status(k,"Enter a 3 or 4 character airport code, like BFI or KBFI.",true);return;}
     if(inChat){status(k,"Weather can't load inside the Claude chat preview. Open N411TA from your Home Screen (or cabenz-creator.github.io/n411ta-wb) to use it.",true);return;}
     $(k+"Apt").value=id; loadApt(k,true);
     const when=new Date($(k+"Date").value+"T"+($(k+"Time").value||"12:00"));
