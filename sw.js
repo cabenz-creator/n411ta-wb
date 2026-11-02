@@ -3,7 +3,7 @@
 // and the saved copy is used only with no connection (or a slow one, after 4 s).
 // Other app files come from the saved copy and are refreshed in the background.
 // Weather requests are never cached; the stencil font is.
-const CACHE = 'r172e-wb-v21';
+const CACHE = 'r172e-wb-v22';
 const FILES = ['./', './index.html', './manifest.webmanifest', './apple-touch-icon.png', './icon-192.png', './airports.js', './parts.js'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES.map(u => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
