@@ -477,7 +477,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
     </div>
     <div class="cols2">
       <div class="panel">
-        <h2>Departure <span class="subt">takeoff</span></h2>
+        <h2>Takeoff</h2>
         <div class="fgrid">
           <label for="dApt">Airport</label><input type="text" id="dApt" maxlength="4" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="KBFI">
           <div class="aname" id="dName"></div>
@@ -486,7 +486,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
           <label for="dSurf">Surface</label><select id="dSurf"><option value="paved">Paved</option><option value="grass">Grass / sod</option></select>
           <label for="dRwy">Runway heading (°M)</label><input type="number" id="dRwy" inputmode="numeric" step="1" min="0" max="360">
           <label for="dDate">Date</label><input type="date" id="dDate">
-          <label for="dTime">Time (your phone's time zone)</label><input type="time" id="dTime">
+          <label for="dTime">E.T.D. (your phone's time zone)</label><input type="time" id="dTime">
         </div>
         <div class="row-btns"><button type="button" id="dNow">Now</button><button type="button" id="dGet" class="primary">Get weather</button></div>
         <p class="wxstat" id="dStat" role="status">Tap Get weather, or fill in the conditions by hand.</p>
@@ -504,7 +504,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
         <p class="note"><a id="dFaa" href="https://aviationweather.gov/data/metar/" target="_blank" rel="noopener">Cross-check this airport on aviationweather.gov</a></p>
       </div>
       <div class="panel">
-        <h2>Arrival <span class="subt">landing</span></h2>
+        <h2>Landing</h2>
         <div class="fgrid">
           <label for="aApt">Airport</label><input type="text" id="aApt" maxlength="4" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="KBFI">
           <div class="aname" id="aName"></div>
@@ -513,7 +513,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
           <label for="aSurf">Surface</label><select id="aSurf"><option value="paved">Paved</option><option value="grass">Grass / sod</option></select>
           <label for="aRwy">Runway heading (°M)</label><input type="number" id="aRwy" inputmode="numeric" step="1" min="0" max="360">
           <label for="aDate">Date</label><input type="date" id="aDate">
-          <label for="aTime">Time (your phone's time zone)</label><input type="time" id="aTime">
+          <label for="aTime">E.T.A. (your phone's time zone)</label><input type="time" id="aTime">
         </div>
         <div class="row-btns"><button type="button" id="aNow">Now</button><button type="button" id="aGet" class="primary">Get weather</button></div>
         <p class="wxstat" id="aStat" role="status">Tap Get weather, or fill in the conditions by hand.</p>
@@ -783,9 +783,9 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
     const w=num("pWt"), lw=num("pLw")??w, margin=Math.max(0,num("pMargin")??25);
     const D=cond("d"), A=cond("a"), msgs=[], corr=[];
     const tag=(c,lbl)=>lbl+(c.apt?" "+c.apt:"")+(c.rwyId?" rwy "+c.rwyId:"");
-    $("ptHead").textContent="Takeoff · "+(D.apt?D.apt+(D.rwyId?" "+D.rwyId:""):"departure")+" · flaps 20°";
-    $("plHead").textContent="Landing · "+(A.apt?A.apt+(A.rwyId?" "+A.rwyId:""):"arrival")+" · flaps 40°";
-    [[D,"Departure"],[A,"Arrival"]].forEach(([c,l])=>{
+    $("ptHead").textContent="Takeoff"+(D.apt?" · "+D.apt+(D.rwyId?" "+D.rwyId:""):"")+" · flaps 20°";
+    $("plHead").textContent="Landing"+(A.apt?" · "+A.apt+(A.rwyId?" "+A.rwyId:""):"")+" · flaps 40°";
+    [[D,"Takeoff"],[A,"Landing"]].forEach(([c,l])=>{
       if(c.noDir) msgs.push(["info",tag(c,l)+": no wind direction (variable) or runway heading, so no headwind credit and the full wind is treated as crosswind."]);
       if(c.xw>15) msgs.push(["bad",tag(c,l)+": crosswind "+c.xw.toFixed(0)+" kt exceeds the 15 kt demonstrated in the POH (page 2-15)."]);
       if(c.pa>7500) msgs.push(["bad",tag(c,l)+": pressure altitude "+Math.round(c.pa)+" ft is above 7500 ft, outside the POH table. No result."]);

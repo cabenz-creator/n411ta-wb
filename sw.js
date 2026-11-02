@@ -1,5 +1,5 @@
 // Caches the app so it opens with no connection. Weather requests are never cached; the stencil font is.
-const CACHE = 'r172e-wb-v12';
+const CACHE = 'r172e-wb-v13';
 const FILES = ['./', './index.html', './manifest.webmanifest', './apple-touch-icon.png', './icon-192.png', './airports.js'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
