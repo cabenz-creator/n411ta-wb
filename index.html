@@ -828,7 +828,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
       <button type="button" id="pmore" hidden>Show more</button>
     </div>
     <p class="note conv">Read by OCR from the 1974 Army catalog scan, so a character can be wrong. Check the part number on the catalog page shown, and check for supersedures with Textron Aviation or your parts supplier before ordering. Engine and propeller parts in this catalog are for the original IO-360-D and constant-speed prop, not the installed O-360-A1A.</p>
-    <footer>Copy puts the part number on your clipboard to paste anywhere. Spruce opens that part's Aircraft Spruce page. Parts Spruce doesn't list under that number show Google instead, which searches Spruce's site. On a drawing, tap an outlined index number to jump to that part in the list. "Catalog p." is the page number printed on the catalog page; "PDF" is the page in the scanned file.</footer>
+    <footer>Copy puts the part number on your clipboard to paste anywhere. Spruce opens that part's Aircraft Spruce page. Parts Spruce doesn't list under that number show Google instead, which searches Google for the part number. On a drawing, tap an outlined index number to jump to that part in the list. "Catalog p." is the page number printed on the catalog page; "PDF" is the page in the scanned file.</footer>
   </section>
   <div class="pzoom" id="pzoom" hidden role="dialog" aria-modal="true" aria-labelledby="pzt">
     <div class="pzbar">
@@ -1344,12 +1344,12 @@ if('serviceWorker' in navigator && location.protocol==='https:'){var had=!!navig
   }));
   let D=null, shown=60, last=[];
   // D.sp lists the part numbers that have an Aircraft Spruce product page (checked against aircraftspruce.com).
-  // Those get a Spruce button; everything else gets a Google search of Spruce's site.
+  // Those get a Spruce button; everything else gets a Google search for the part number.
   const pnKey=pn=>String(pn).toUpperCase().replace(/[^A-Z0-9.\-\/]/g,"");
   let SP=null;
   const onSpruce=pn=>{ if(!SP) SP=new Set((D&&D.sp)||[]); return SP.has(pnKey(pn)); };
   const spruce=pn=>"https://www.aircraftspruce.com/catalog/pnpages/"+encodeURIComponent(pnKey(pn))+".php";
-  const google=pn=>"https://www.google.com/search?q="+encodeURIComponent("site:aircraftspruce.com "+pnKey(pn));
+  const google=pn=>"https://www.google.com/search?q="+encodeURIComponent(pnKey(pn));
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const norm=s=>s.toUpperCase().replace(/[^A-Z0-9]/g,"");
   function ready(){ D=window.N411PARTS; if(!D) return false;
@@ -1377,7 +1377,7 @@ if('serviceWorker' in navigator && location.protocol==='https:'){var had=!!navig
     const q=$("pq").value.trim(), f=$("pfig").value;
     $("pcount").textContent=!q&&!f?("Search "+D.e.length.toLocaleString()+" catalog lines by part number or name, or pick a figure."):(last.length?last.length.toLocaleString()+" match"+(last.length===1?"":"es")+(last.length>shown?", showing "+shown:""):"No matches. Try fewer words or part of the number.");
     $("plist").innerHTML=last.slice(0,shown).map((x,k)=>{ const [pn,d,fig,idx,pdf,pg]=x, ft=fig&&D.figs[fig]?D.figs[fig][0]:"";
-      return '<li data-k="'+k+'"><span class="prow">'+(idx?'<span class="pid" title="Index number on the drawing">ID# '+esc(idx)+'</span>':'')+'<span class="pn">'+hl(pn,words)+'</span><button type="button" class="pbtn pcopy" data-pn="'+esc(pn)+'" aria-label="Copy part number '+esc(pn)+'">Copy</button><a class="pbtn pspr'+(onSpruce(pn)?'':' pgoo')+'" href="'+(onSpruce(pn)?spruce(pn):google(pn))+'" target="_blank" rel="noopener" aria-label="'+(onSpruce(pn)?'Open '+esc(pn)+' at Aircraft Spruce':'Search Google for '+esc(pn)+' on Aircraft Spruce')+'">'+(onSpruce(pn)?'Spruce':'Google')+'</a></span><span class="pd">'+hl(d,words)+'</span><span class="pm">'+(fig?"Fig. "+fig+(idx?"-"+esc(idx):"")+(ft?" · "+esc(ft):""):"")+(pg?" · Catalog p. "+pg:"")+" · PDF "+pdf+'</span></li>'; }).join("");
+      return '<li data-k="'+k+'"><span class="prow">'+(idx?'<span class="pid" title="Index number on the drawing">ID# '+esc(idx)+'</span>':'')+'<span class="pn">'+hl(pn,words)+'</span><button type="button" class="pbtn pcopy" data-pn="'+esc(pn)+'" aria-label="Copy part number '+esc(pn)+'">Copy</button><a class="pbtn pspr'+(onSpruce(pn)?'':' pgoo')+'" href="'+(onSpruce(pn)?spruce(pn):google(pn))+'" target="_blank" rel="noopener" aria-label="'+(onSpruce(pn)?'Open '+esc(pn)+' at Aircraft Spruce':'Search Google for '+esc(pn))+'">'+(onSpruce(pn)?'Spruce':'Google')+'</a></span><span class="pd">'+hl(d,words)+'</span><span class="pm">'+(fig?"Fig. "+fig+(idx?"-"+esc(idx):"")+(ft?" · "+esc(ft):""):"")+(pg?" · Catalog p. "+pg:"")+" · PDF "+pdf+'</span></li>'; }).join("");
     $("pmore").hidden=last.length<=shown;
   }
   $("pmore").addEventListener("click",()=>{shown+=100; draw();});
