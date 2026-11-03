@@ -214,6 +214,7 @@ table.tq th{font-family:var(--display)}
 .plist .prow{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .plist .prow{align-items:center;gap:8px}
 .plist .pn{font-family:var(--mono);font-weight:600;font-size:14.5px;color:var(--ink);margin-right:auto;word-break:break-all}
+.plist .pid{font-family:var(--display);font-size:12px;letter-spacing:.05em;font-weight:600;color:var(--ink);background:var(--accent-soft);border:1px solid var(--accent);border-radius:4px;padding:3px 7px;white-space:nowrap}
 .plist .pbtn{display:inline-flex;align-items:center;justify-content:center;font-family:var(--display);font-size:12px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;background:none;border:1px solid var(--rule);border-radius:5px;padding:0 12px;color:var(--ink);cursor:pointer;min-height:34px;min-width:64px;line-height:1}
 .plist .pbtn:active{background:var(--accent-soft)}
 .plist .pspr{border-color:var(--accent)}
@@ -1341,7 +1342,11 @@ if('serviceWorker' in navigator && location.protocol==='https:'){var had=!!navig
     $("tqFine").hidden=!f; $("tqCoarse").hidden=f; $("tqNoteFine").hidden=!f; $("tqNoteCoarse").hidden=f;
   }));
   let D=null, shown=60, last=[];
-  const spruce=pn=>"https://www.aircraftspruce.com/search/search.php?s="+encodeURIComponent(String(pn).replace(/[^A-Za-z0-9.\-\/]/g,""));
+  // Spruce sells AN/MS/NAS hardware under the same number, so those go straight to the product page.
+  // Other numbers (Cessna airframe parts) get a Google search limited to aircraftspruce.com.
+  const spruce=pn=>{ const c=String(pn).toUpperCase().replace(/[^A-Z0-9.\-\/]/g,"");
+    if(/^(AN|MS|NAS)\d[A-Z0-9\-]*$/.test(c)) return "https://www.aircraftspruce.com/catalog/pnpages/"+encodeURIComponent(c)+".php";
+    return "https://www.google.com/search?q="+encodeURIComponent("site:aircraftspruce.com "+c); };
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const norm=s=>s.toUpperCase().replace(/[^A-Z0-9]/g,"");
   function ready(){ D=window.N411PARTS; if(!D) return false;
@@ -1369,7 +1374,7 @@ if('serviceWorker' in navigator && location.protocol==='https:'){var had=!!navig
     const q=$("pq").value.trim(), f=$("pfig").value;
     $("pcount").textContent=!q&&!f?("Search "+D.e.length.toLocaleString()+" catalog lines by part number or name, or pick a figure."):(last.length?last.length.toLocaleString()+" match"+(last.length===1?"":"es")+(last.length>shown?", showing "+shown:""):"No matches. Try fewer words or part of the number.");
     $("plist").innerHTML=last.slice(0,shown).map((x,k)=>{ const [pn,d,fig,idx,pdf,pg]=x, ft=fig&&D.figs[fig]?D.figs[fig][0]:"";
-      return '<li data-k="'+k+'"><span class="prow"><span class="pn">'+hl(pn,words)+'</span><button type="button" class="pbtn pcopy" data-pn="'+esc(pn)+'" aria-label="Copy part number '+esc(pn)+'">Copy</button><a class="pbtn pspr" href="'+spruce(pn)+'" target="_blank" rel="noopener" aria-label="Look up '+esc(pn)+' at Aircraft Spruce">Spruce</a></span><span class="pd">'+hl(d,words)+'</span><span class="pm">'+(fig?"Fig. "+fig+(idx?"-"+esc(idx):"")+(ft?" · "+esc(ft):""):"")+(pg?" · Catalog p. "+pg:"")+" · PDF "+pdf+'</span></li>'; }).join("");
+      return '<li data-k="'+k+'"><span class="prow">'+(idx?'<span class="pid" title="Index number on the drawing">ID# '+esc(idx)+'</span>':'')+'<span class="pn">'+hl(pn,words)+'</span><button type="button" class="pbtn pcopy" data-pn="'+esc(pn)+'" aria-label="Copy part number '+esc(pn)+'">Copy</button><a class="pbtn pspr" href="'+spruce(pn)+'" target="_blank" rel="noopener" aria-label="Look up '+esc(pn)+' at Aircraft Spruce">Spruce</a></span><span class="pd">'+hl(d,words)+'</span><span class="pm">'+(fig?"Fig. "+fig+(idx?"-"+esc(idx):"")+(ft?" · "+esc(ft):""):"")+(pg?" · Catalog p. "+pg:"")+" · PDF "+pdf+'</span></li>'; }).join("");
     $("pmore").hidden=last.length<=shown;
   }
   $("pmore").addEventListener("click",()=>{shown+=100; draw();});
@@ -1391,7 +1396,7 @@ if('serviceWorker' in navigator && location.protocol==='https:'){var had=!!navig
       '<p class="figcap">'+(anyhs?'Tap an outlined number to jump to that part, or tap elsewhere on the drawing to zoom.':'Tap the drawing to zoom.')+' Its index numbers match the "Fig. '+esc(f)+'-n" numbers below.</p>';
     fb.querySelectorAll(".figwrap img").forEach(im=>{ const sz=()=>thumbScale(im); if(im.complete) sz(); im.addEventListener("load",sz); }); }
   function hsHTML(p){ const e=D.hs&&D.hs[p]; if(!e) return ""; const [W,H,L]=e;
-    return L.map(([l,x,y,w,h])=>'<button type="button" class="hs" data-idx="'+esc(l)+'" style="left:'+((x+w/2)/W*100).toFixed(2)+'%;top:'+((y+h/2)/H*100).toFixed(2)+'%;--bw:'+w+';--bh:'+h+'" aria-label="Index '+esc(l)+', show in list"></button>').join(""); }
+    return L.map(([l,x,y,w,h])=>'<button type="button" class="hs" data-idx="'+esc(l)+'" style="left:'+((x+w/2)/W*100).toFixed(2)+'%;top:'+((y+h/2)/H*100).toFixed(2)+'%;--bw:'+w+';--bh:'+h+'" aria-label="ID# '+esc(l)+', show in list"></button>').join(""); }
   function thumbScale(im){ if(im.naturalWidth) im.parentNode.style.setProperty("--s",im.clientWidth/im.naturalWidth); }
   window.addEventListener("resize",()=>fb.querySelectorAll(".figwrap img").forEach(thumbScale));
   let toastT=null;
@@ -1400,12 +1405,12 @@ if('serviceWorker' in navigator && location.protocol==='https:'){var had=!!navig
     const hit=x=>String(x[2])===f&&String(x[3]).toUpperCase()===String(idx).toUpperCase();
     if(!last.some(hit)&&$("pq").value.trim()){ $("pq").value=""; run(); }
     const ks=[]; last.forEach((x,k)=>{ if(hit(x)) ks.push(k); });
-    if(!ks.length){ toast("Index "+idx+" isn't in this figure's parts list (the scan may have missed that line)."); return; }
+    if(!ks.length){ toast("ID# "+idx+" isn't in the scanned parts list for this figure. The scan may have missed that line; check the catalog page."); return; }
     if(ks[ks.length-1]>=shown){ shown=ks[ks.length-1]+20; draw(); }
     const rows=ks.map(k=>document.querySelector('#plist li[data-k="'+k+'"]')).filter(Boolean);
     rows.forEach(r=>r.classList.add("hit")); setTimeout(()=>rows.forEach(r=>r.classList.remove("hit")),2500);
     if(rows[0]){ rows[0].scrollIntoView({behavior:"smooth",block:"center"}); const a=rows[0].querySelector(".pcopy"); if(a) a.focus({preventScroll:true}); }
-    if(ks.length>1) toast("Index "+idx+": "+ks.length+" parts listed"); }
+    if(ks.length>1) toast("ID# "+idx+": "+ks.length+" parts listed"); }
   function zset(s,cx,cy){ const n=zi.naturalWidth; if(!n) return;
     s=Math.max(zfit,Math.min(6,s)); if(cx==null){ cx=zs.clientWidth/2; cy=zs.clientHeight/2; }
     const fx=(zs.scrollLeft+cx)/zi.offsetWidth, fy=(zs.scrollTop+cy)/zi.offsetHeight;
