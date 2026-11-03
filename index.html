@@ -211,8 +211,24 @@ table.tq th{font-family:var(--display)}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .plist{list-style:none;margin:8px 0 0;padding:0}
 .plist li{border-bottom:1px solid var(--rule);padding:9px 2px}
-.plist .pn{font-family:var(--mono);font-weight:600;font-size:14.5px;background:none;border:0;padding:0;color:var(--ink);cursor:pointer;text-align:left}
-.plist .pn.copied::after{content:" copied";font-family:var(--display);font-size:11px;color:var(--ok);letter-spacing:.06em}
+.plist .prow{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.plist .prow{align-items:center;gap:8px}
+.plist .pn{font-family:var(--mono);font-weight:600;font-size:14.5px;color:var(--ink);margin-right:auto;word-break:break-all}
+.plist .pbtn{display:inline-flex;align-items:center;justify-content:center;font-family:var(--display);font-size:12px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;background:none;border:1px solid var(--rule);border-radius:5px;padding:0 12px;color:var(--ink);cursor:pointer;min-height:34px;min-width:64px;line-height:1}
+.plist .pbtn:active{background:var(--accent-soft)}
+.plist .pspr{border-color:var(--accent)}
+.plist .pspr::after{content:"\2197";margin-left:4px;font-size:11px}
+.plist .pcopy.copied{color:var(--ok);border-color:var(--ok)}
+.plist li.hit{background:var(--accent-soft);transition:background .6s}
+.fighold{position:relative;margin-bottom:8px}
+.fighold .figwrap{position:relative;border:1px solid var(--rule);border-radius:6px;background:#fff;overflow:hidden;cursor:zoom-in}
+.fighold .figwrap img{display:block;width:100%;height:auto}
+.figzoombtn{position:absolute;right:8px;top:8px;z-index:2;font-family:var(--display);font-size:12px;letter-spacing:.05em;background:var(--ink);color:var(--paper,#fff);border:0;border-radius:4px;padding:6px 9px;cursor:pointer;opacity:.85}
+.hs{position:absolute;transform:translate(-50%,-50%);width:max(18px,calc(var(--bw)*var(--s,1)*1px + 8px));height:max(18px,calc(var(--bh)*var(--s,1)*1px + 8px));border:2px solid rgba(196,120,30,.75);border-radius:5px;background:rgba(255,200,90,.12);padding:0;cursor:pointer}
+.hs:hover,.hs:focus-visible{background:rgba(255,200,90,.45);outline:none}
+.pzwrap{position:relative;display:inline-block;vertical-align:top}
+.ptoast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 18px);transform:translateX(-50%);z-index:120;background:#26292a;color:#f2f0ea;font-size:13.5px;padding:9px 14px;border-radius:6px;max-width:calc(100vw - 32px);box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.ptoast[hidden]{display:none}
 .plist .pd{display:block;font-size:14px;margin-top:2px}
 .plist .pm{display:block;font-size:12px;color:var(--muted);margin-top:2px}
 .plist mark{background:var(--accent-soft);color:inherit;padding:0 1px}
@@ -810,7 +826,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
       <button type="button" id="pmore" hidden>Show more</button>
     </div>
     <p class="note conv">Read by OCR from the 1974 Army catalog scan, so a character can be wrong. Check the part number on the catalog page shown, and check for supersedures with Textron Aviation or your parts supplier before ordering. Engine and propeller parts in this catalog are for the original IO-360-D and constant-speed prop, not the installed O-360-A1A.</p>
-    <footer>Tap a part number to copy it. "Catalog p." is the page number printed on the catalog page; "PDF" is the page in the scanned file.</footer>
+    <footer>Copy puts the part number on your clipboard to paste anywhere. Spruce opens an Aircraft Spruce search for that number. On a drawing, tap an outlined index number to jump to that part in the list. "Catalog p." is the page number printed on the catalog page; "PDF" is the page in the scanned file.</footer>
   </section>
   <div class="pzoom" id="pzoom" hidden role="dialog" aria-modal="true" aria-labelledby="pzt">
     <div class="pzbar">
@@ -822,8 +838,9 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
       <button type="button" class="pzw" id="pzfit">Fit</button>
       <button type="button" id="pzclose" aria-label="Close">✕</button>
     </div>
-    <div class="pzscroll" id="pzscroll"><img id="pzimg" alt="" draggable="false"></div>
+    <div class="pzscroll" id="pzscroll"><div class="pzwrap" id="pzwrap"><img id="pzimg" alt="" draggable="false"><div id="pzhs"></div></div></div>
   </div>
+  <div class="ptoast" id="ptoast" role="status" hidden></div>
 </div>
 
 <script src="airports.js" id="apdb" async></script>
@@ -1324,6 +1341,7 @@ if('serviceWorker' in navigator && location.protocol==='https:'){var had=!!navig
     $("tqFine").hidden=!f; $("tqCoarse").hidden=f; $("tqNoteFine").hidden=!f; $("tqNoteCoarse").hidden=f;
   }));
   let D=null, shown=60, last=[];
+  const spruce=pn=>"https://www.aircraftspruce.com/search/search.php?s="+encodeURIComponent(String(pn).replace(/[^A-Za-z0-9.\-\/]/g,""));
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const norm=s=>s.toUpperCase().replace(/[^A-Z0-9]/g,"");
   function ready(){ D=window.N411PARTS; if(!D) return false;
@@ -1350,16 +1368,17 @@ if('serviceWorker' in navigator && location.protocol==='https:'){var had=!!navig
     words=words||$("pq").value.trim().toUpperCase().split(/\s+/).filter(Boolean);
     const q=$("pq").value.trim(), f=$("pfig").value;
     $("pcount").textContent=!q&&!f?("Search "+D.e.length.toLocaleString()+" catalog lines by part number or name, or pick a figure."):(last.length?last.length.toLocaleString()+" match"+(last.length===1?"":"es")+(last.length>shown?", showing "+shown:""):"No matches. Try fewer words or part of the number.");
-    $("plist").innerHTML=last.slice(0,shown).map(x=>{ const [pn,d,fig,idx,pdf,pg]=x, ft=fig&&D.figs[fig]?D.figs[fig][0]:"";
-      return '<li><button type="button" class="pn" data-pn="'+esc(pn)+'">'+hl(pn,words)+'</button><span class="pd">'+hl(d,words)+'</span><span class="pm">'+(fig?"Fig. "+fig+(idx?"-"+esc(idx):"")+(ft?" · "+esc(ft):""):"")+(pg?" · Catalog p. "+pg:"")+" · PDF "+pdf+'</span></li>'; }).join("");
+    $("plist").innerHTML=last.slice(0,shown).map((x,k)=>{ const [pn,d,fig,idx,pdf,pg]=x, ft=fig&&D.figs[fig]?D.figs[fig][0]:"";
+      return '<li data-k="'+k+'"><span class="prow"><span class="pn">'+hl(pn,words)+'</span><button type="button" class="pbtn pcopy" data-pn="'+esc(pn)+'" aria-label="Copy part number '+esc(pn)+'">Copy</button><a class="pbtn pspr" href="'+spruce(pn)+'" target="_blank" rel="noopener" aria-label="Look up '+esc(pn)+' at Aircraft Spruce">Spruce</a></span><span class="pd">'+hl(d,words)+'</span><span class="pm">'+(fig?"Fig. "+fig+(idx?"-"+esc(idx):"")+(ft?" · "+esc(ft):""):"")+(pg?" · Catalog p. "+pg:"")+" · PDF "+pdf+'</span></li>'; }).join("");
     $("pmore").hidden=last.length<=shown;
   }
   $("pmore").addEventListener("click",()=>{shown+=100; draw();});
   let t=null; $("pq").addEventListener("input",()=>{clearTimeout(t); t=setTimeout(run,150);});
   $("pfig").addEventListener("change",run);
-  $("plist").addEventListener("click",e=>{ const b=e.target.closest(".pn"); if(!b) return;
-    const v=b.dataset.pn; const done=()=>{b.classList.add("copied"); setTimeout(()=>b.classList.remove("copied"),1500);};
-    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(v).then(done,()=>{}); });
+  $("plist").addEventListener("click",e=>{ const b=e.target.closest(".pcopy"); if(!b) return;
+    const v=b.dataset.pn; const done=()=>{b.classList.add("copied"); b.textContent="Copied"; setTimeout(()=>{b.classList.remove("copied"); b.textContent="Copy";},1500);};
+    const old=()=>{ const t=document.createElement("textarea"); t.value=v; t.setAttribute("readonly",""); t.style.cssText="position:fixed;top:0;left:-9999px;opacity:0"; document.body.appendChild(t); t.select(); t.setSelectionRange(0,v.length); let ok=false; try{ ok=document.execCommand("copy"); }catch(e){} t.remove(); if(ok) done(); else toast("Couldn't copy. Press and hold the part number to select it."); };
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(v).then(done,old); else old(); });
   // Figure picture + full-screen zoom
   const fb=$("pfigbox"), zm=$("pzoom"), zs=$("pzscroll"), zi=$("pzimg");
   let zp=[], zk=0, zf="", zsc=1, zfit=1, zlast=null;
@@ -1367,23 +1386,43 @@ if('serviceWorker' in navigator && location.protocol==='https:'){var had=!!navig
   function figShow(){ const f=$("pfig").value; if(!f||!D){ fb.hidden=true; fb.innerHTML=""; return; }
     const pg=(D.fp&&D.fp[f])||[], t=D.figs[f]?D.figs[f][0]:""; fb.hidden=false;
     if(!pg.length){ fb.innerHTML='<p class="figcap">Figure '+esc(f)+' has no drawing in the catalog, only the parts list below.</p>'; return; }
-    fb.innerHTML=pg.map((p,i)=>'<button type="button" class="figthumb" data-i="'+i+'" aria-label="Zoom figure '+esc(f)+(pg.length>1?', sheet '+(i+1):'')+'"><img src="'+figsrc(p)+'" alt="Figure '+esc(f)+', '+esc(t)+(pg.length>1?', sheet '+(i+1)+' of '+pg.length:'')+'" loading="lazy"></button>').join("")+
-      '<p class="figcap">Tap the drawing to zoom. Its index numbers match the "Fig. '+esc(f)+'-n" numbers below.</p>'; }
+    const anyhs=pg.some(p=>D.hs&&D.hs[p]&&D.hs[p][2].length);
+    fb.innerHTML=pg.map((p,i)=>'<div class="fighold"><button type="button" class="figzoombtn" data-i="'+i+'" aria-label="Zoom figure '+esc(f)+(pg.length>1?', sheet '+(i+1):'')+'">Zoom</button><div class="figwrap" data-i="'+i+'"><img src="'+figsrc(p)+'" alt="Figure '+esc(f)+', '+esc(t)+(pg.length>1?', sheet '+(i+1)+' of '+pg.length:'')+'" loading="lazy">'+hsHTML(p)+'</div></div>').join("")+
+      '<p class="figcap">'+(anyhs?'Tap an outlined number to jump to that part, or tap elsewhere on the drawing to zoom.':'Tap the drawing to zoom.')+' Its index numbers match the "Fig. '+esc(f)+'-n" numbers below.</p>';
+    fb.querySelectorAll(".figwrap img").forEach(im=>{ const sz=()=>thumbScale(im); if(im.complete) sz(); im.addEventListener("load",sz); }); }
+  function hsHTML(p){ const e=D.hs&&D.hs[p]; if(!e) return ""; const [W,H,L]=e;
+    return L.map(([l,x,y,w,h])=>'<button type="button" class="hs" data-idx="'+esc(l)+'" style="left:'+((x+w/2)/W*100).toFixed(2)+'%;top:'+((y+h/2)/H*100).toFixed(2)+'%;--bw:'+w+';--bh:'+h+'" aria-label="Index '+esc(l)+', show in list"></button>').join(""); }
+  function thumbScale(im){ if(im.naturalWidth) im.parentNode.style.setProperty("--s",im.clientWidth/im.naturalWidth); }
+  window.addEventListener("resize",()=>fb.querySelectorAll(".figwrap img").forEach(thumbScale));
+  let toastT=null;
+  function toast(m){ const el=$("ptoast"); el.textContent=m; el.hidden=false; clearTimeout(toastT); toastT=setTimeout(()=>{el.hidden=true;},2600); }
+  function jump(idx){ const f=$("pfig").value;
+    const hit=x=>String(x[2])===f&&String(x[3]).toUpperCase()===String(idx).toUpperCase();
+    if(!last.some(hit)&&$("pq").value.trim()){ $("pq").value=""; run(); }
+    const ks=[]; last.forEach((x,k)=>{ if(hit(x)) ks.push(k); });
+    if(!ks.length){ toast("Index "+idx+" isn't in this figure's parts list (the scan may have missed that line)."); return; }
+    if(ks[ks.length-1]>=shown){ shown=ks[ks.length-1]+20; draw(); }
+    const rows=ks.map(k=>document.querySelector('#plist li[data-k="'+k+'"]')).filter(Boolean);
+    rows.forEach(r=>r.classList.add("hit")); setTimeout(()=>rows.forEach(r=>r.classList.remove("hit")),2500);
+    if(rows[0]){ rows[0].scrollIntoView({behavior:"smooth",block:"center"}); const a=rows[0].querySelector(".pcopy"); if(a) a.focus({preventScroll:true}); }
+    if(ks.length>1) toast("Index "+idx+": "+ks.length+" parts listed"); }
   function zset(s,cx,cy){ const n=zi.naturalWidth; if(!n) return;
     s=Math.max(zfit,Math.min(6,s)); if(cx==null){ cx=zs.clientWidth/2; cy=zs.clientHeight/2; }
     const fx=(zs.scrollLeft+cx)/zi.offsetWidth, fy=(zs.scrollTop+cy)/zi.offsetHeight;
-    zsc=s; zi.style.width=Math.round(n*s)+"px";
+    zsc=s; zi.style.width=Math.round(n*s)+"px"; $("pzwrap").style.setProperty("--s",s);
     zs.scrollLeft=fx*zi.offsetWidth-cx; zs.scrollTop=fy*zi.offsetHeight-cy; }
-  function zfitNow(){ const n=zi.naturalWidth; if(!n) return; zfit=Math.min(1,zs.clientWidth/n); zsc=zfit; zi.style.width=Math.round(n*zfit)+"px"; zs.scrollTop=0; zs.scrollLeft=0; }
+  function zfitNow(){ const n=zi.naturalWidth; if(!n) return; zfit=Math.min(1,zs.clientWidth/n); zsc=zfit; zi.style.width=Math.round(n*zfit)+"px"; $("pzwrap").style.setProperty("--s",zfit); zs.scrollTop=0; zs.scrollLeft=0; }
   function zload(k){ zk=k; const t=D.figs[zf]?D.figs[zf][0]:"";
     $("pzt").textContent="Fig. "+zf+(t?" · "+t:"")+(zp.length>1?" ("+(k+1)+"/"+zp.length+")":"");
     $("pzprev").hidden=$("pznext").hidden=zp.length<2; $("pzprev").disabled=k===0; $("pznext").disabled=k===zp.length-1;
-    zi.alt=$("pzt").textContent; zi.style.width="";
+    zi.alt=$("pzt").textContent; zi.style.width=""; $("pzhs").innerHTML=hsHTML(zp[k]);
     zi.onload=zfitNow; zi.src=figsrc(zp[k]); if(zi.complete&&zi.naturalWidth) zfitNow(); }
   function zopen(i){ zf=$("pfig").value; zp=(D.fp&&D.fp[zf])||[]; if(!zp.length) return;
     zlast=document.activeElement; zm.hidden=false; document.documentElement.style.overflow="hidden"; zload(i); $("pzclose").focus(); }
-  function zclose(){ zm.hidden=true; document.documentElement.style.overflow=""; if(zlast&&zlast.focus) zlast.focus(); }
-  fb.addEventListener("click",e=>{ const b=e.target.closest(".figthumb"); if(b) zopen(+b.dataset.i); });
+  function zclose(){ zm.hidden=true; document.documentElement.style.overflow=""; if(zlast&&zlast.focus&&document.body.contains(zlast)) zlast.focus({preventScroll:true}); }
+  fb.addEventListener("click",e=>{ const h=e.target.closest(".hs"); if(h){ jump(h.dataset.idx); return; }
+    const b=e.target.closest(".figzoombtn,.figwrap"); if(b) zopen(+b.dataset.i); });
+  $("pzhs").addEventListener("click",e=>{ const h=e.target.closest(".hs"); if(!h) return; e.stopPropagation(); zclose(); jump(h.dataset.idx); });
   $("pzclose").addEventListener("click",zclose);
   $("pzin").addEventListener("click",()=>zset(zsc*1.5));
   $("pzout").addEventListener("click",()=>zset(zsc/1.5));
