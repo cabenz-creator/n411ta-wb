@@ -59,7 +59,8 @@ td.item{min-width:150px}
 td.item .lim{display:block;font-size:12px;color:var(--muted)}
 td.num{font-family:var(--mono);font-size:14px;white-space:nowrap}
 input[type=number]{font-family:var(--mono);font-size:16px;width:84px;padding:5px 7px;border:1px solid var(--rule);border-radius:4px;background:var(--bg);color:var(--ink);text-align:right}
-input.arm{width:66px;background:transparent;border-style:dashed}
+input.arm{width:66px;background:transparent;border:0;color:var(--ink);pointer-events:none;-moz-appearance:textfield;appearance:textfield}
+input.arm::-webkit-inner-spin-button,input.arm::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 input.over{border-color:var(--bad);background:var(--bad-soft)}
 .gal{display:flex;align-items:center;justify-content:flex-end;gap:6px}
@@ -214,6 +215,8 @@ table.tq th{font-family:var(--display)}
 .plist .prow{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .plist .prow{align-items:center;gap:8px}
 .plist .pn{font-family:var(--mono);font-weight:600;font-size:14.5px;color:var(--ink);margin-right:auto;word-break:break-all}
+.plist .pnone{color:var(--muted);font-weight:500}
+.plist .pgo{border-color:var(--accent)}
 .plist .pid{font-family:var(--display);font-size:12px;letter-spacing:.05em;font-weight:600;color:var(--ink);background:var(--accent-soft);border:1px solid var(--accent);border-radius:4px;padding:3px 7px;white-space:nowrap}
 .plist .pbtn{display:inline-flex;align-items:center;justify-content:center;font-family:var(--display);font-size:12px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;background:none;border:1px solid var(--rule);border-radius:5px;padding:0 12px;color:var(--ink);cursor:pointer;min-height:34px;min-width:64px;line-height:1}
 .plist .pbtn:active{background:var(--accent-soft)}
@@ -315,49 +318,49 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
           <tr>
             <td class="item">Oil at 1.9 lb/qt<span class="lim">8 qt sump (Lycoming O-360)</span></td>
             <td><div class="gal"><input type="number" id="qOil" inputmode="decimal" step="0.5" min="0" max="8" value="8" aria-label="Oil quarts"><span>qt</span></div><div class="gal"><span id="wOil">—</span></div></td>
-            <td><input type="number" class="arm" id="aOil" step="0.1" value="-21" aria-label="Oil arm"></td>
+            <td><input type="number" class="arm" id="aOil" step="0.1" value="-21" aria-label="Oil arm" readonly tabindex="-1"></td>
             <td class="num" id="mOil">—</td>
           </tr>
           <tr>
             <td class="item">Pilot</td>
             <td><input type="number" id="wPilot" inputmode="decimal" step="1" min="0" value="200"></td>
-            <td><input type="number" class="arm" id="aPilot" step="0.1" value="36" aria-label="Pilot arm"></td>
+            <td><input type="number" class="arm" id="aPilot" step="0.1" value="36" aria-label="Pilot arm" readonly tabindex="-1"></td>
             <td class="num" id="mPilot">—</td>
           </tr>
           <tr>
             <td class="item">Copilot / front passenger</td>
             <td><input type="number" id="wCop" inputmode="decimal" step="1" min="0" value="200"></td>
-            <td><input type="number" class="arm" id="aCop" step="0.1" value="36" aria-label="Copilot arm"></td>
+            <td><input type="number" class="arm" id="aCop" step="0.1" value="36" aria-label="Copilot arm" readonly tabindex="-1"></td>
             <td class="num" id="mCop">—</td>
           </tr>
           <tr>
             <td class="item">Fuel at 6 lb/gal<span class="lim">52 gal tanks; 46 usable in all flight</span></td>
             <td><div class="gal"><input type="number" id="gFuel" inputmode="decimal" step="1" min="0" max="52" value="46" aria-label="Fuel gallons"><span>gal</span></div><div class="gal"><span id="wFuel">—</span></div></td>
-            <td><input type="number" class="arm" id="aFuel" step="0.1" value="48" aria-label="Fuel arm"></td>
+            <td><input type="number" class="arm" id="aFuel" step="0.1" value="48" aria-label="Fuel arm" readonly tabindex="-1"></td>
             <td class="num" id="mFuel">—</td>
           </tr>
           <tr class="rowRear">
             <td class="item">Rear passenger 1</td>
             <td><input type="number" id="wRear1" inputmode="decimal" step="1" min="0" value="100"></td>
-            <td><input type="number" class="arm" id="aRear1" step="0.1" value="70" aria-label="Rear passenger 1 arm"></td>
+            <td><input type="number" class="arm" id="aRear1" step="0.1" value="70" aria-label="Rear passenger 1 arm" readonly tabindex="-1"></td>
             <td class="num" id="mRear1">—</td>
           </tr>
           <tr class="rowRear">
             <td class="item">Rear passenger 2</td>
             <td><input type="number" id="wRear2" inputmode="decimal" step="1" min="0" value="100"></td>
-            <td><input type="number" class="arm" id="aRear2" step="0.1" value="70" aria-label="Rear passenger 2 arm"></td>
+            <td><input type="number" class="arm" id="aRear2" step="0.1" value="70" aria-label="Rear passenger 2 arm" readonly tabindex="-1"></td>
             <td class="num" id="mRear2">—</td>
           </tr>
           <tr class="rowLoad" hidden>
             <td class="item">Passenger load area<span class="lim">Arm from the seat-removal W&amp;B change</span></td>
             <td><input type="number" id="wLoad" inputmode="decimal" step="1" min="0" value="0"></td>
-            <td><input type="number" class="arm" id="aLoad" step="0.1" value="70" aria-label="Passenger load area arm"></td>
+            <td><input type="number" class="arm" id="aLoad" step="0.1" value="70" aria-label="Passenger load area arm" readonly tabindex="-1"></td>
             <td class="num" id="mLoad">—</td>
           </tr>
           <tr>
             <td class="item">Baggage<span class="lim">200 lb max</span></td>
             <td><input type="number" id="wBag" inputmode="decimal" step="1" min="0" value="54"></td>
-            <td><input type="number" class="arm" id="aBag" step="0.1" value="95" aria-label="Baggage arm"></td>
+            <td><input type="number" class="arm" id="aBag" step="0.1" value="95" aria-label="Baggage arm" readonly tabindex="-1"></td>
             <td class="num" id="mBag">—</td>
           </tr>
           <tr class="total">
@@ -859,7 +862,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
   const N411={std:{ew:"1496.5",em:"55.673"},norear:{ew:"1476",em:"54.176"}};
   const emp={std:{...N411.std},norear:{...N411.norear}};
   try{const s=JSON.parse(localStorage.getItem(KEY)||"null"); if(s){
-    fields.forEach(f=>{ if(s[f]!==undefined&&s[f]!=="") $(f).value=s[f]; });
+    fields.forEach(f=>{ if(/^a[A-Z]/.test(f)) return; if(s[f]!==undefined&&s[f]!=="") $(f).value=s[f]; });   // arms are fixed by the POH, never restored
     if(s.emp){ if(s.emp.std) emp.std=s.emp.std; if(s.emp.norear) emp.norear=s.emp.norear; }
     if(!s.ewV2){ if(emp.std.ew=="1551"&&emp.std.em=="59.8") emp.std={...N411.std}; if(emp.norear.ew===""||emp.norear.em==="") emp.norear={...N411.norear}; }
     else if(s.ew!==undefined){ emp.std={ew:s.ew,em:s.em}; }
@@ -1345,6 +1348,7 @@ if('serviceWorker' in navigator && location.protocol==='https:'){var had=!!navig
   let D=null, shown=60, last=[];
   // D.sp lists the part numbers that have an Aircraft Spruce product page (checked against aircraftspruce.com).
   // Those get a Spruce button; everything else gets a Google search for the part number.
+  const sref=pn=>{ const m=/^SEE FIG (\d+)/.exec(pn||""); return m?m[1]:""; };
   const pnKey=pn=>String(pn).toUpperCase().replace(/[^A-Z0-9.\-\/]/g,"");
   let SP=null;
   const onSpruce=pn=>{ if(!SP) SP=new Set((D&&D.sp)||[]); return SP.has(pnKey(pn)); };
@@ -1377,12 +1381,15 @@ if('serviceWorker' in navigator && location.protocol==='https:'){var had=!!navig
     const q=$("pq").value.trim(), f=$("pfig").value;
     $("pcount").textContent=!q&&!f?("Search "+D.e.length.toLocaleString()+" catalog lines by part number or name, or pick a figure."):(last.length?last.length.toLocaleString()+" match"+(last.length===1?"":"es")+(last.length>shown?", showing "+shown:""):"No matches. Try fewer words or part of the number.");
     $("plist").innerHTML=last.slice(0,shown).map((x,k)=>{ const [pn,d,fig,idx,pdf,pg]=x, ft=fig&&D.figs[fig]?D.figs[fig][0]:"";
-      return '<li data-k="'+k+'"><span class="prow">'+(idx?'<span class="pid" title="Index number on the drawing">ID# '+esc(idx)+'</span>':'')+'<span class="pn">'+hl(pn,words)+'</span><button type="button" class="pbtn pcopy" data-pn="'+esc(pn)+'" aria-label="Copy part number '+esc(pn)+'">Copy</button><a class="pbtn pspr'+(onSpruce(pn)?'':' pgoo')+'" href="'+(onSpruce(pn)?spruce(pn):google(pn))+'" target="_blank" rel="noopener" aria-label="'+(onSpruce(pn)?'Open '+esc(pn)+' at Aircraft Spruce':'Search Google for '+esc(pn))+'">'+(onSpruce(pn)?'Spruce':'Google')+'</a></span><span class="pd">'+hl(d,words)+'</span><span class="pm">'+(fig?"Fig. "+fig+(idx?"-"+esc(idx):"")+(ft?" · "+esc(ft):""):"")+(pg?" · Catalog p. "+pg:"")+" · PDF "+pdf+'</span></li>'; }).join("");
+      return '<li data-k="'+k+'"><span class="prow">'+(idx?'<span class="pid" title="Index number on the drawing">ID# '+esc(idx)+'</span>':'')+'<span class="pn'+(pn?'':' pnone')+'">'+(pn?(sref(pn)?'See Fig. '+sref(pn):hl(pn,words)):'No P/N')+'</span>'+(sref(pn)?'<button type="button" class="pbtn pgo" data-fig="'+sref(pn)+'" aria-label="Open figure '+sref(pn)+'">Open Fig. '+sref(pn)+'</button>':pn?'<button type="button" class="pbtn pcopy" data-pn="'+esc(pn)+'" aria-label="Copy part number '+esc(pn)+'">Copy</button><a class="pbtn pspr'+(onSpruce(pn)?'':' pgoo')+'" href="'+(onSpruce(pn)?spruce(pn):google(pn))+'" target="_blank" rel="noopener" aria-label="'+(onSpruce(pn)?'Open '+esc(pn)+' at Aircraft Spruce':'Search Google for '+esc(pn))+'">'+(onSpruce(pn)?'Spruce':'Google')+'</a>':'')+'</span><span class="pd">'+hl(d,words)+'</span><span class="pm">'+(fig?"Fig. "+fig+(idx?"-"+esc(idx):"")+(ft?" · "+esc(ft):""):"")+(pg?" · Catalog p. "+pg:"")+" · PDF "+pdf+'</span></li>'; }).join("");
     $("pmore").hidden=last.length<=shown;
   }
   $("pmore").addEventListener("click",()=>{shown+=100; draw();});
   let t=null; $("pq").addEventListener("input",()=>{clearTimeout(t); t=setTimeout(run,150);});
   $("pfig").addEventListener("change",run);
+  $("plist").addEventListener("click",e=>{ const g=e.target.closest(".pgo"); if(!g) return;
+    const f=g.dataset.fig, sel=$("pfig"); if(![...sel.options].some(o=>o.value===f)){ toast("Figure "+f+" isn't in this catalog."); return; }
+    sel.value=f; $("pq").value=""; run(); figShow(); $("pfigbox").scrollIntoView({behavior:"smooth",block:"start"}); });
   $("plist").addEventListener("click",e=>{ const b=e.target.closest(".pcopy"); if(!b) return;
     const v=b.dataset.pn; const done=()=>{b.classList.add("copied"); b.textContent="Copied"; setTimeout(()=>{b.classList.remove("copied"); b.textContent="Copy";},1500);};
     const old=()=>{ const t=document.createElement("textarea"); t.value=v; t.setAttribute("readonly",""); t.style.cssText="position:fixed;top:0;left:-9999px;opacity:0"; document.body.appendChild(t); t.select(); t.setSelectionRange(0,v.length); let ok=false; try{ ok=document.execCommand("copy"); }catch(e){} t.remove(); if(ok) done(); else toast("Couldn't copy. Press and hold the part number to select it."); };
