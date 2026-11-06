@@ -372,7 +372,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
           <tr class="sub">
             <td class="item">Fuel burned<span class="lim">Trip + reserve used, or enter minutes × average gal/hr</span></td>
             <td><div class="gal"><input type="number" id="gBurn" inputmode="decimal" step="1" min="0" value="20" aria-label="Fuel burned gallons"><span>gal</span></div>
-              <div class="gal burnt"><input type="number" id="tBurn" inputmode="numeric" step="5" min="0" placeholder="—" aria-label="Flight time minutes"><span>min ×</span><input type="number" id="gph" inputmode="decimal" step="0.5" min="0" value="10" aria-label="Average fuel burn gallons per hour"><span>gph</span></div></td>
+              <div class="gal burnt"><input type="number" id="tBurn" inputmode="numeric" step="5" min="0" placeholder="—" aria-label="Flight time minutes"><span>min ×</span><input type="number" id="gph" inputmode="decimal" step="0.5" min="0" value="11" aria-label="Average fuel burn gallons per hour"><span>gph</span></div></td>
             <td class="num" id="aBurn">—</td>
             <td class="num" id="mBurn">—</td>
           </tr>
@@ -860,13 +860,14 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
   const OIL_LB=1.9, MAX_OIL=8, FUEL_LB=6, MAX_FUEL=52, MAX_BAG=200, MAX_N=2500, MAX_U=2200, AFT_N=47.3, AFT_U=40.5;
   const fwd=w=>w<=1950?35.0:35.0+(w-1950)*(5.5/550);
   const fields=["qOil","aOil","wPilot","aPilot","wCop","aCop","gFuel","aFuel","wRear1","aRear1","wRear2","aRear2","wLoad","aLoad","wBag","aBag","gBurn","tBurn","gph"];
-  const SAMPLE={ew:1496.5,em:55.673,qOil:8,aOil:-21,wPilot:200,aPilot:36,wCop:200,aCop:36,gFuel:46,aFuel:48,wRear1:100,aRear1:70,wRear2:100,aRear2:70,wLoad:0,aLoad:70,wBag:54,aBag:95,gBurn:20,tBurn:"",gph:10};
+  const SAMPLE={ew:1496.5,em:55.673,qOil:8,aOil:-21,wPilot:200,aPilot:36,wCop:200,aCop:36,gFuel:46,aFuel:48,wRear1:100,aRear1:70,wRear2:100,aRear2:70,wLoad:0,aLoad:70,wBag:54,aBag:95,gBurn:20,tBurn:"",gph:11};
   const KEY="r172e-wb-v1";
   let cfg="std";
   const N411={std:{ew:"1496.5",em:"55.673"},norear:{ew:"1476",em:"54.176"}};
   const emp={std:{...N411.std},norear:{...N411.norear}};
   try{const s=JSON.parse(localStorage.getItem(KEY)||"null"); if(s){
-    fields.forEach(f=>{ if(/^a[A-Z]/.test(f)) return; if(s[f]!==undefined&&s[f]!=="") $(f).value=s[f]; });   // arms are fixed by the POH, never restored
+    fields.forEach(f=>{ if(/^a[A-Z]/.test(f)) return; if(s[f]!==undefined&&s[f]!=="") $(f).value=s[f]; });
+    if(!s.gph11){ $("gph").value=11; if($("tBurn").value!=="") $("gBurn").value=Math.round(parseFloat($("tBurn").value)/60*11*10)/10; }   // arms are fixed by the POH, never restored
     if(s.emp){ if(s.emp.std) emp.std=s.emp.std; if(s.emp.norear) emp.norear=s.emp.norear; }
     if(!s.ewV2){ if(emp.std.ew=="1551"&&emp.std.em=="59.8") emp.std={...N411.std}; if(emp.norear.ew===""||emp.norear.em==="") emp.norear={...N411.norear}; }
     else if(s.ew!==undefined){ emp.std={ew:s.ew,em:s.em}; }
@@ -952,7 +953,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
     $("msgs").innerHTML=msgs.map(([c,t])=>'<li class="'+c+'">'+t+'</li>').join("");
 
     draw(tW,tM,lW,lM,tN.ok,lN.ok);
-    try{const o={cfg,emp,ewV2:1};fields.forEach(f=>o[f]=$(f).value);localStorage.setItem(KEY,JSON.stringify(o));}catch(e){}
+    try{const o={cfg,emp,ewV2:1,gph11:1};fields.forEach(f=>o[f]=$(f).value);localStorage.setItem(KEY,JSON.stringify(o));}catch(e){}
   }
 
   // chart
