@@ -65,6 +65,9 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline
 input.over{border-color:var(--bad);background:var(--bad-soft)}
 .gal{display:flex;align-items:center;justify-content:flex-end;gap:6px}
 .gal span{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.gal.burnt{margin-top:5px}
+.gal.burnt input{width:52px}
+.gal.burnt span{white-space:nowrap}
 tr.total td{border-top:2px solid var(--ink);border-bottom:none;font-weight:600}
 tr.sub td{background:var(--bg)}
 .note{font-size:12.5px;color:var(--muted);margin:12px 0 0}
@@ -367,8 +370,9 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
             <td>Takeoff</td><td class="num" id="tW">—</td><td class="num" id="tA">—</td><td class="num" id="tM">—</td>
           </tr>
           <tr class="sub">
-            <td class="item">Fuel burned<span class="lim">Trip + reserve used</span></td>
-            <td><div class="gal"><input type="number" id="gBurn" inputmode="decimal" step="1" min="0" value="20" aria-label="Fuel burned gallons"><span>gal</span></div></td>
+            <td class="item">Fuel burned<span class="lim">Trip + reserve used, or enter minutes × average gal/hr</span></td>
+            <td><div class="gal"><input type="number" id="gBurn" inputmode="decimal" step="1" min="0" value="20" aria-label="Fuel burned gallons"><span>gal</span></div>
+              <div class="gal burnt"><input type="number" id="tBurn" inputmode="numeric" step="5" min="0" placeholder="—" aria-label="Flight time minutes"><span>min ×</span><input type="number" id="gph" inputmode="decimal" step="0.5" min="0" value="10" aria-label="Average fuel burn gallons per hour"><span>gph</span></div></td>
             <td class="num" id="aBurn">—</td>
             <td class="num" id="mBurn">—</td>
           </tr>
@@ -378,7 +382,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
         </tbody>
       </table>
       </div>
-      <p class="note">Pick the configuration at the top; each keeps its own empty weight and moment. Empty weights are from N411TA's K-Bay Air weight and balance changes: standard 1496.5 lb at 37.20 in (10/6/2021, Hartzell prop install), rear seat removed 1476 lb at 36.70 in (10/2/2023). Dashed fields are station arms; edit them if your W&amp;B data lists different stations.</p>
+      <p class="note">Pick the configuration at the top; each keeps its own empty weight and moment. Empty weights are from N411TA's K-Bay Air weight and balance changes: standard 1496.5 lb at 37.20 in (10/6/2021, Hartzell prop install), rear seat removed 1476 lb at 36.70 in (10/2/2023). Station arms are fixed and can't be edited.</p>
       <div class="row-btns">
         <button type="button" id="clearBtn">Clear payload</button>
         <button type="button" id="sampleBtn">Reset to defaults</button>
@@ -855,8 +859,8 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
   const $=id=>document.getElementById(id);
   const OIL_LB=1.9, MAX_OIL=8, FUEL_LB=6, MAX_FUEL=52, MAX_BAG=200, MAX_N=2500, MAX_U=2200, AFT_N=47.3, AFT_U=40.5;
   const fwd=w=>w<=1950?35.0:35.0+(w-1950)*(5.5/550);
-  const fields=["qOil","aOil","wPilot","aPilot","wCop","aCop","gFuel","aFuel","wRear1","aRear1","wRear2","aRear2","wLoad","aLoad","wBag","aBag","gBurn"];
-  const SAMPLE={ew:1496.5,em:55.673,qOil:8,aOil:-21,wPilot:200,aPilot:36,wCop:200,aCop:36,gFuel:46,aFuel:48,wRear1:100,aRear1:70,wRear2:100,aRear2:70,wLoad:0,aLoad:70,wBag:54,aBag:95,gBurn:20};
+  const fields=["qOil","aOil","wPilot","aPilot","wCop","aCop","gFuel","aFuel","wRear1","aRear1","wRear2","aRear2","wLoad","aLoad","wBag","aBag","gBurn","tBurn","gph"];
+  const SAMPLE={ew:1496.5,em:55.673,qOil:8,aOil:-21,wPilot:200,aPilot:36,wCop:200,aCop:36,gFuel:46,aFuel:48,wRear1:100,aRear1:70,wRear2:100,aRear2:70,wLoad:0,aLoad:70,wBag:54,aBag:95,gBurn:20,tBurn:"",gph:10};
   const KEY="r172e-wb-v1";
   let cfg="std";
   const N411={std:{ew:"1496.5",em:"55.673"},norear:{ew:"1476",em:"54.176"}};
@@ -982,6 +986,12 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
     $("chart").innerHTML=s;
   }
 
+  // minutes x average gal/hr fills Fuel burned; typing gallons directly clears the minutes
+  function burnFromTime(){ const m=parseFloat($("tBurn").value), g=parseFloat($("gph").value);
+    if(isFinite(m)&&m>=0&&isFinite(g)&&g>=0) $("gBurn").value=Math.round(m/60*g*10)/10; }
+  $("tBurn").addEventListener("input",burnFromTime);
+  $("gph").addEventListener("input",()=>{ if($("tBurn").value!=="") burnFromTime(); });
+  $("gBurn").addEventListener("input",()=>{ $("tBurn").value=""; });
   fields.forEach(f=>$(f).addEventListener("input",calc));
   ["ew","em"].forEach(f=>$(f).addEventListener("input",()=>{
     if(cfg==="norear"&&!noRearSet()){ emp.norear={ew:$("ew").value,em:$("em").value}; }
@@ -990,7 +1000,7 @@ footer{margin-top:22px;font-size:12.5px;color:var(--muted);max-width:80ch}
   }));
   $("cfgStd").addEventListener("click",()=>setCfg("std"));
   $("cfgNoRear").addEventListener("click",()=>setCfg("norear"));
-  $("clearBtn").addEventListener("click",()=>{["wPilot","wCop","gFuel","wRear1","wRear2","wLoad","wBag","gBurn"].forEach(f=>$(f).value=0);calc();});
+  $("clearBtn").addEventListener("click",()=>{["wPilot","wCop","gFuel","wRear1","wRear2","wLoad","wBag","gBurn"].forEach(f=>$(f).value=0);$("tBurn").value="";calc();});
   $("sampleBtn").addEventListener("click",()=>{fields.forEach(f=>$(f).value=SAMPLE[f]);emp.std={...N411.std};emp.norear={...N411.norear};setCfg("std");});
   setCfg(cfg);
 })();
